@@ -16,7 +16,7 @@ Ideally, the pre-reservation **User Interface** will contain a map of the XL wit
 
 1. On the front end, we will depend heavily upon **frontend/src/coworking**, in particular, we will extend upon **frontend/src/coworking/reservation**. On the back end, we will depend on the user entities and roles in **backend/entities** to determine who has the ability to reserve a seat, cancel a reservation, and so on. As a result, we will depend upon the authentication API route in **backend/api/authentication** as well, and will likely need to extend upon the service for reservations in **backend/services/coworking/reservation**.
 
-2. Planned page components include a reservation page. The widgets we will need include a reservation card, available registration slot tables, a date selector, and reserve button.
+2. Planned page components include a reservation page. The widgets we will need include a reservation card, available registration slot tables, a date selector, a reserve button, and a cancel button.
 
 3. This project will require that we make use of the models in **backend/models/coworking/reservation** and we will need to implement the models in **backend/models/coworking/availability**.
 
