@@ -1,4 +1,3 @@
-=======
 # Seat Pre-Reservations
 > Written by Bernie Chen, Kene Ochuba, Lucas Siegel, and Sunny Wang for the final project of COMP 423: Foundations of Software Engineering.<br>
 > *Fall 2023*
@@ -10,3 +9,12 @@ It has been a goal of the CSXL Experience Labs for some time to allow the abilit
 With this feature, students will be able to pre-reserve a seat in the XL for a specific time and date up to 1 week in advance. Seats that aren't reserved in the next hour will be available on a drop-in basis. The feature also checks that the XL is open and the seat is not already reserved when the student tries to make a reservation. Furthermore, there will be a cap on the amount of reservations a student can make at a time.
 
 Ideally, the pre-reservation **User Interface** will contain a map of the XL with outlines of the seats available and reserved. However, if this is unattainable, the system will instead assign an ID to each seat, which will be used to show whether the seat is available or reserved.
+
+
+## Key Personas
+
+**Sandy Student** - Sandy is a CS major who will visit the CS Experience Lab to utilize the resources of the collaboration and productivity space.
+
+**Ashley Ambassador** - Ashley is a student ambassador for the CS Experience Lab who works at the check-in desk, manages student reservations, and welcomes incoming students.
+
+**Andy Adminstrator** - Andy is an adminstrator for the CS Experience Lab who manages the space and student ambassador.
