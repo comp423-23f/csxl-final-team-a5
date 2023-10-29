@@ -1,3 +1,8 @@
+=======
+# Seat Pre-Reservations
+> Written by Bernie Chen, Kene Ochuba, Lucas Siegel, and Sunny Wang for the final project of COMP 423: Foundations of Software Engineering.<br>
+> *Fall 2023*
+
 ## Overview
 
 It has been a goal of the CSXL Experience Labs for some time to allow the ability for students to reserve seats in the lab, whether it be for collaboration or simply to access the wide range of tools provided. Now, **50%** of the seats will be prereservable up to **1 week** in advance, while others will remain available for drop-in use only to ensure a balanced working environment.
