@@ -23,4 +23,3 @@ def getenv(variable: str) -> str:
         return value
     else:
         raise NameError(f"Error: {variable} Environment Variable not Defined")
-
