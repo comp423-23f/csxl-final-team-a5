@@ -7,7 +7,7 @@ import { ProfileEditorComponent } from './profile/profile-editor/profile-editor.
 import { CoworkingPageComponent } from './coworking/coworking-home/coworking-home.component';
 import { AmbassadorPageComponent } from './coworking/ambassador-home/ambassador-home.component';
 import { AboutComponent } from './about/about.component';
-import { ReservePageComponent } from './reserve/reserve-component';
+import { ReservePageComponent } from './reserve/reserve-page/reserve-page.component';
 
 const routes: Routes = [
   HomeComponent.Route,
