@@ -14,6 +14,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { ReservationComponent } from './reservation/reservation.component';
+import { UpcomingReservationsCard } from './widgets/upcoming-reservations-card/upcoming-reservations-card';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { ReservationComponent } from './reservation/reservation.component';
     AmbassadorPageComponent,
     CoworkingDropInCard,
     CoworkingReservationCard,
+    UpcomingReservationsCard,
     CoworkingHoursCard
   ],
   imports: [
