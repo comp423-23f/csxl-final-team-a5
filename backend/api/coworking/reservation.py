@@ -2,7 +2,6 @@
 
 This API is used to make and manage reservations."""
 
-from typing import Sequence
 from fastapi import APIRouter, Depends, HTTPException
 from ..authentication import registered_user
 from ...services.coworking.reservation import ReservationService
@@ -43,14 +42,6 @@ def get_reservation(
     reservation_svc: ReservationService = Depends(),
 ) -> Reservation:
     return reservation_svc.get_reservation(subject, id)
-
-
-@api.get("/reservationUpcoming")
-def get_upcoming_reservations(
-    subject: User = Depends(registered_user),
-    reservation_svc: ReservationService = Depends(),
-) -> Sequence[Reservation]:
-    return reservation_svc.get_upcoming_reservations_for_user(subject, subject)
 
 
 @api.put("/reservation/{id}", tags=["Coworking"])
