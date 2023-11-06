@@ -43,6 +43,10 @@
     grid-column-start: 1;
 }
 
+.other-upcomingreservations-card-container {
+    grid-column-start: 1;
+}
+
 /** Make cards display in one column, with the event card appearing last */
 @media only screen and (max-device-width: 730px) {
     .coworking-grid {
@@ -56,5 +60,9 @@
 
     .dropin-card-container {
         order: 1;
+    }
+
+    .upcomingreservations-card-container {
+        order: 2;
     }
 }
