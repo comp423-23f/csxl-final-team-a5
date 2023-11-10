@@ -27,6 +27,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 /* Application Specific */
 import { AppRoutingModule } from './app-routing.module';
@@ -67,6 +69,8 @@ import { EventFilterPipe } from './event/event-filter/event-filter.pipe';
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
     MatProgressBarModule,
     MatSidenavModule,
     MatSliderModule,
