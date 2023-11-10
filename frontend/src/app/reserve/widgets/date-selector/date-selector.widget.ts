@@ -29,11 +29,12 @@ export class DateSelector {
     this.minDate = today; // min date is today
 
     const twoWeeksFromNow = new Date();
-    twoWeeksFromNow.setDate(today.getDate() + 14); // add 14 days to the current date
+
+    twoWeeksFromNow.setDate(today.getDate() + 7); // add 7 days to the current date
     this.maxDate = twoWeeksFromNow; // max date is two weeks from now
 
     this.selectedDate.valueChanges.subscribe((value) => {
-      console.log('Selected Date:', value);
+      console.log('Selected Date:', value); // You can perform actions with the selected date here
     });
   }
 
