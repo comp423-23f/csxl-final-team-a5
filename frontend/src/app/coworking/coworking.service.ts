@@ -41,7 +41,7 @@ export class CoworkingService implements OnDestroy {
 
   pollStatus(): void {
     this.http
-      .get<CoworkingStatusJSON>('/api/coworking/status')
+      .get<CoworkingStatusJSON>('/api/coworking/status/reserve')
       .pipe(map(parseCoworkingStatusJSON))
       .subscribe((status) => this.status.set(status));
   }
