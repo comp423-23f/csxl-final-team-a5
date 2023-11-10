@@ -12,6 +12,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Route, ActivatedRoute, Router } from '@angular/router';
+import { ReserveService } from '../reserve.service';
 
 @Component({
   selector: 'app-reserve-page',

@@ -13,9 +13,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { SharedModule } from '../shared/shared.module';
 import { ReservationCard } from './widgets/reservation-card/reservation-card.widget';
 import { DateSelector } from './widgets/date-selector/date-selector.widget';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [ReservePageComponent, ReservationCard, DateSelector],
+  declarations: [ReservePageComponent, ReservationCard],
   imports: [
     CommonModule,
     SharedModule,
@@ -26,7 +27,10 @@ import { DateSelector } from './widgets/date-selector/date-selector.widget';
     MatFormFieldModule,
     MatExpansionModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DateSelector
   ]
 })
 export class ReserveModule {}
