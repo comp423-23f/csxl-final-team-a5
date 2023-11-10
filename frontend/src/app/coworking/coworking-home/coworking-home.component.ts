@@ -87,6 +87,7 @@ export class CoworkingPageComponent implements OnInit, OnDestroy {
     return this.status$.pipe(
       map((status) => {
         let now = new Date();
+        now.setDate(now.getDate() + 1);
         return status.operating_hours.find((hours) => hours.start <= now);
       })
     );

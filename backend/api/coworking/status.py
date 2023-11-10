@@ -33,7 +33,7 @@ def get_coworking_status(
     return status_svc.get_coworking_status(subject)
 
 
-@api.get("/reserve", response_model=Status, tags=["Coworking"])
+@api.get("/reserve", response_model=Status, tags=["Reserve"])
 def get_coworking_status_reservation(
     subject: User = Depends(registered_user), status_svc: StatusService = Depends()
 ):
