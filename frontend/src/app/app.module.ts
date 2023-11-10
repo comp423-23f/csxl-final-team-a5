@@ -40,6 +40,7 @@ import { AboutComponent } from './about/about.component';
 import { GateComponent } from './gate/gate.component';
 import { ProfileEditorComponent } from './profile/profile-editor/profile-editor.component';
 import { EventFilterPipe } from './event/event-filter/event-filter.pipe';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { EventFilterPipe } from './event/event-filter/event-filter.pipe';
     MatSliderModule,
     MatSnackBarModule,
     MatTabsModule,
+    MatSelectModule,
     MatToolbarModule,
     FormsModule,
     RouterModule,

@@ -29,6 +29,7 @@ export class DateSelector {
     this.minDate = today; // min date is today
 
     const twoWeeksFromNow = new Date();
+
     twoWeeksFromNow.setDate(today.getDate() + 7); // add 7 days to the current date
     this.maxDate = twoWeeksFromNow; // max date is two weeks from now
 

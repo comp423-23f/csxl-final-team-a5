@@ -14,9 +14,11 @@ import { SharedModule } from '../shared/shared.module';
 import { ReservationCard } from './widgets/reservation-card/reservation-card.widget';
 import { DateSelector } from './widgets/date-selector/date-selector.widget';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TimeSelector } from './widgets/time-selector/time-selector.widget';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
-  declarations: [ReservePageComponent, ReservationCard],
+  declarations: [ReservePageComponent, ReservationCard, TimeSelector],
   imports: [
     CommonModule,
     SharedModule,
@@ -24,6 +26,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatListModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatSelectModule,
     MatFormFieldModule,
     MatExpansionModule,
     MatButtonModule,
