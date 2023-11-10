@@ -123,3 +123,9 @@ mat-checkbox {
 a {
     text-decoration: none;
 }
+
+.dateTimeSelectors {
+    display: flex;
+    justify-content: left;
+    gap: 20px;
+}

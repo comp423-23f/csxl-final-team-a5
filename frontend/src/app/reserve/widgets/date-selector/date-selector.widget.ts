@@ -33,7 +33,7 @@ export class DateSelector {
     this.maxDate = twoWeeksFromNow; // max date is two weeks from now
 
     this.selectedDate.valueChanges.subscribe((value) => {
-      console.log('Selected Date:', value); // You can perform actions with the selected date here
+      console.log('Selected Date:', value);
     });
   }
 
