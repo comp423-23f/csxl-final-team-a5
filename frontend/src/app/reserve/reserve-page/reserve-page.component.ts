@@ -59,18 +59,19 @@ export class ReservePageComponent implements OnInit, OnDestroy {
 
   constructor(
     route: ActivatedRoute,
-    public coworkingService: CoworkingService,
+    public reserveService: ReserveService,
+    // public coworkingService: CoworkingService,
     private router: Router,
     private reservationService: ReservationService
   ) {
-    this.status$ = coworkingService.status$;
+    this.status$ = reserveService.status$;
     this.openOperatingHours$ = this.initNextOperatingHours();
     this.isOpen$ = this.initIsOpen();
     this.activeReservation$ = this.initActiveReservation();
   }
 
   reserve(seatSelection: SeatAvailability[]) {
-    this.coworkingService.draftReservation(seatSelection).subscribe({
+    this.reserveService.draftReservation(seatSelection).subscribe({
       next: (reservation) => {
         this.router.navigateByUrl(`/coworking/reservation/${reservation.id}`);
       }
@@ -79,7 +80,7 @@ export class ReservePageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.timerSubscription = timer(0, 10000).subscribe(() =>
-      this.coworkingService.pollStatus()
+      this.reserveService.pollStatus()
     );
   }
 
