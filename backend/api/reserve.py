@@ -5,7 +5,7 @@ Reserve routes are used to create, retrieve, and update Reservations."""
 import datetime
 from fastapi import APIRouter, Depends
 from typing import Sequence
-from authentication import registered_user
+from ..api.authentication import registered_user
 from backend.models.coworking.time_range import TimeRange
 from backend.services.coworking.operating_hours import OperatingHoursService
 from ..services.coworking.reservation import ReservationService
@@ -32,15 +32,6 @@ openapi_tags = {
 }
 
 
-# @api.get("", tags=["Reserve"])
-# def get_reservations(
-#   subject: User = Depends(registered_user),
-#   reservation_svc: ReservationService = Depends(),
-# ) -> Sequence[Reservation]:
-#    """Get the Users current reservations."""
-#   return reservation_svc.get_upcoming_reservations_for_user(subject, subject)"""
-
-
 @api.post("", tags=["Reserve"])
 def draft_reservation(
     reservation_request: ReservationRequest,
@@ -58,7 +49,7 @@ def get_available_seats(
     seats: Sequence[Seat] = seats,
     bounds: TimeRange = TimeRange(
         start=datetime.datetime.now(),
-        end=datetime.datetime(10000000000000000000000, 0, 0),
+        end=datetime.datetime.now() + datetime.timedelta(7),
     ),
 ) -> dict[int, SeatAvailability]:
     """Get the available seats based on the date and time input."""
@@ -67,3 +58,12 @@ def get_available_seats(
         operating_hours, bounds
     )
     return reservation_svc._initialize_seat_availability_dict(seats, availability)
+
+
+@api.get("/upcoming", tags=["Reserve"])
+def get_reservations(
+    subject: User = Depends(registered_user),
+    reservation_svc: ReservationService = Depends(),
+) -> Sequence[Reservation]:
+    """Get the Users current reservations."""
+    return reservation_svc.get_upcoming_reservations_for_user(subject, subject)
