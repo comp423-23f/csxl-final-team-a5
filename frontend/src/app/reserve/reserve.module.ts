@@ -12,9 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { SharedModule } from '../shared/shared.module';
 import { ReservationCard } from './widgets/reservation-card/reservation-card.widget';
-import { DateSelector } from './widgets/date-selector/date-selector.widget';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TimeSelector } from './widgets/time-selector/time-selector.widget';
 import { MatSelectModule } from '@angular/material/select';
 
 import { CoworkingHoursCard } from '../coworking/widgets/operating-hours-panel/operating-hours-panel.widget';
@@ -23,7 +21,7 @@ import { CoworkingReservationCard } from '../coworking/widgets/coworking-reserva
 import { CoworkingModule } from '../coworking/coworking.module';
 
 @NgModule({
-  declarations: [ReservePageComponent, ReservationCard, TimeSelector],
+  declarations: [ReservePageComponent],
   imports: [
     CommonModule,
     CoworkingModule,
@@ -39,7 +37,7 @@ import { CoworkingModule } from '../coworking/coworking.module';
     MatTableModule,
     FormsModule,
     ReactiveFormsModule,
-    DateSelector
+    ReservationCard
   ]
 })
 export class ReserveModule {}
