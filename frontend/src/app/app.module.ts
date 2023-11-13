@@ -27,6 +27,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 /* Application Specific */
 import { AppRoutingModule } from './app-routing.module';
@@ -38,6 +40,7 @@ import { AboutComponent } from './about/about.component';
 import { GateComponent } from './gate/gate.component';
 import { ProfileEditorComponent } from './profile/profile-editor/profile-editor.component';
 import { EventFilterPipe } from './event/event-filter/event-filter.pipe';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -67,11 +70,14 @@ import { EventFilterPipe } from './event/event-filter/event-filter.pipe';
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
     MatProgressBarModule,
     MatSidenavModule,
     MatSliderModule,
     MatSnackBarModule,
     MatTabsModule,
+    MatSelectModule,
     MatToolbarModule,
     FormsModule,
     RouterModule,
