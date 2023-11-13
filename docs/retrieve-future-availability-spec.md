@@ -17,4 +17,4 @@ We prioritized maintaining the consistency between the Coworking and Reserve tab
 
 ## Development Concerns
 
-For future development, user experience imporvements can be augmented through additions in the reserve-page component and resere service. _The reserve service polls the status of the selected date retrieved by the reservation-card widget in the reserve component._ In this way, additions in the way future seat avaialblity can be made to allow users to select specific seats.
+For future development, user experience improvements can be augmented through additions to the reserve-page component and reserve service. _The reserve service polls the status of the selected date retrieved by the reservation-card widget in the reserve component._ In this way, additions to the way future seat availability can be made can allow users to select specific seats.
