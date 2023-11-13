@@ -65,8 +65,14 @@ class StatusService:
             operating_hours=operating_hours,
         )
 
-    def get_coworking_status_reserve(self, subject: User) -> Status:
+    def get_coworking_status_reserve(self, subject: User, specific_datetime: datetime = None) -> Status:  # type: ignore
         """All-in-one endpoint for a user to simultaneously get their own upcoming reservations and current status of the XL."""
+
+        if specific_datetime:
+            now = specific_datetime
+        else:
+            now = datetime.now()
+
         my_reservations = self._reservation_svc.get_current_reservations_for_user(
             subject, subject
         )
@@ -82,9 +88,9 @@ class StatusService:
             # This also prioritizes _not_ placing walkins in reservable seats.
         )
 
-        all_window = TimeRange(
-            start=now, end=now + self._policies_svc.reservation_window(subject)
-        )
+        # all_window = TimeRange(
+        #     start=now, end=now + self._policies_svc.reservation_window(subject)
+        # )
         seats = self._seat_svc.list()  # All Seats are fair game for walkin purposes
         seat_availability = self._reservation_svc.seat_availability(
             seats, walkin_window

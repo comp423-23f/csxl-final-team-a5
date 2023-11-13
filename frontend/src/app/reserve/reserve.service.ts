@@ -39,10 +39,19 @@ export class ReserveService implements OnDestroy {
   ngOnDestroy(): void {
     this.profileSubscription.unsubscribe();
   }
-
   pollStatus(): void {
     this.http
-      .get<CoworkingStatusJSON>('/api/coworking/status/reserve')
+      .get<CoworkingStatusJSON>('/api/coworking/status')
+      .pipe(map(parseCoworkingStatusJSON))
+      .subscribe((status) => this.status.set(status));
+  }
+
+  pollStatusRefresh(dateTime: string): void {
+    console.log(`/api/coworking/status/reserve?date_time=${dateTime}`);
+    this.http
+      .get<CoworkingStatusJSON>(
+        `/api/coworking/status/reserve?date_time=${dateTime}`
+      )
       .pipe(map(parseCoworkingStatusJSON))
       .subscribe((status) => this.status.set(status));
   }

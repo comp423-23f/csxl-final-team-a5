@@ -2,6 +2,7 @@
 
 This API is used to retrieve and update a user's profile."""
 
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends
 from ..authentication import registered_user
 from ...services.coworking import StatusService
@@ -35,7 +36,9 @@ def get_coworking_status(
 
 @api.get("/reserve", response_model=Status, tags=["Reserve"])
 def get_coworking_status_reservation(
-    subject: User = Depends(registered_user), status_svc: StatusService = Depends()
+    subject: User = Depends(registered_user),
+    status_svc: StatusService = Depends(),
+    date_time: datetime = None,  # type: ignore
 ):
     """Status endpoint supports the primary screen of the coworking features.
 
@@ -43,4 +46,4 @@ def get_coworking_status_reservation(
     It also fetches the current seat availability of the XL during operating hours.
     Finally, it provides a list of upcoming hours.
     """
-    return status_svc.get_coworking_status_reserve(subject)
+    return status_svc.get_coworking_status_reserve(subject, date_time)

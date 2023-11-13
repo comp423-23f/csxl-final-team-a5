@@ -32,6 +32,7 @@ import {
   timer
 } from 'rxjs';
 import { ReservationService } from '../../coworking/reservation/reservation.service';
+import { ReservationCard } from '../widgets/reservation-card/reservation-card.widget';
 
 @Component({
   selector: 'app-reserve-page',
@@ -39,6 +40,8 @@ import { ReservationService } from '../../coworking/reservation/reservation.serv
   styleUrls: ['./reserve-page.component.css']
 })
 export class ReservePageComponent implements OnInit, OnDestroy {
+  public formattedDateTime: string | undefined;
+
   public status$: Observable<CoworkingStatus>;
 
   public openOperatingHours$: Observable<OperatingHours | undefined>;
@@ -79,9 +82,14 @@ export class ReservePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.timerSubscription = timer(0, 10000).subscribe(() =>
-      this.reserveService.pollStatus()
-    );
+    this.timerSubscription = timer(0, 10000).subscribe(() => {
+      this.reserveService.pollStatus();
+    });
+  }
+
+  onFormattedDateTimeChange(formattedDateTime: string) {
+    this.formattedDateTime = formattedDateTime;
+    this.reserveService.pollStatusRefresh(formattedDateTime);
   }
 
   ngOnDestroy(): void {
