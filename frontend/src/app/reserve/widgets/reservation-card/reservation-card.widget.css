@@ -129,3 +129,7 @@ a {
     justify-content: left;
     gap: 20px;
 }
+
+#availabilityButton {
+    height: 56px;
+    }
