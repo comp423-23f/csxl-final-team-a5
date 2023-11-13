@@ -36,6 +36,12 @@ import { UpcomingReservationsCard } from './widgets/upcoming-reservations-card/u
     MatButtonModule,
     MatTableModule,
     AsyncPipe
+  ],
+  exports: [
+    CoworkingReservationCard,
+    UpcomingReservationsCard,
+    CoworkingHoursCard,
+    CoworkingDropInCard
   ]
 })
 export class CoworkingModule {}

@@ -17,10 +17,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TimeSelector } from './widgets/time-selector/time-selector.widget';
 import { MatSelectModule } from '@angular/material/select';
 
+import { CoworkingHoursCard } from '../coworking/widgets/operating-hours-panel/operating-hours-panel.widget';
+import { CoworkingDropInCard } from '../coworking/widgets/dropin-availability-card/dropin-availability-card.widget';
+import { CoworkingReservationCard } from '../coworking/widgets/coworking-reservation-card/coworking-reservation-card';
+import { CoworkingModule } from '../coworking/coworking.module';
+
 @NgModule({
   declarations: [ReservePageComponent, ReservationCard, TimeSelector],
   imports: [
     CommonModule,
+    CoworkingModule,
     SharedModule,
     MatCardModule,
     MatListModule,
