@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -49,6 +49,8 @@ export class ReservationCard {
   currentDate: Date | undefined;
   currentTime: Date | undefined;
 
+  @Output() searchClicked = new EventEmitter<void>();
+
   constructor() {
     const today = new Date();
     this.minDate = today; // min date is today
@@ -67,5 +69,7 @@ export class ReservationCard {
       this.currentDate = current;
     });
   }
-  selectDateTime() {}
+  selectDateTime() {
+    this.searchClicked.emit();
+  }
 }

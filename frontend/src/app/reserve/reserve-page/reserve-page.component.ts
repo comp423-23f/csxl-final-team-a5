@@ -45,7 +45,7 @@ export class ReservePageComponent implements OnInit, OnDestroy {
   public isOpen$: Observable<boolean>;
 
   public activeReservation$: Observable<Reservation | undefined>;
-
+  public searching: boolean;
   private timerSubscription!: Subscription;
 
   /** Route information to be used in Organization Routing Module */
@@ -68,6 +68,12 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     this.openOperatingHours$ = this.initNextOperatingHours();
     this.isOpen$ = this.initIsOpen();
     this.activeReservation$ = this.initActiveReservation();
+    this.searching = false;
+  }
+
+  onSearchClicked() {
+    this.searching = true;
+    console.log('Retrieving', this.searching);
   }
 
   reserve(seatSelection: SeatAvailability[]) {
