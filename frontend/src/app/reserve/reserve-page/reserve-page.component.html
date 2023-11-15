@@ -5,7 +5,7 @@
   <div class="coworking-reservations-grid">
     <ng-container *ngIf="status$ | async as status">
       <div *ngIf="searching" class="dropin-card-container">
-        <coworking-dropin-availability-card
+        <reserve-availability-card
           [seat_availability]="status.seat_availability"
           (seatsSelected)="reserve($event)" />
       </div>
