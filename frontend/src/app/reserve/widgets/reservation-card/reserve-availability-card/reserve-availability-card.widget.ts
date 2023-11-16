@@ -56,11 +56,11 @@ class SeatCategory {
     if (this.reservable_now) {
       result += 'now';
     } else if (this.reservable_soon) {
-      result += ' in ';
-      let now = new Date();
+      result += ' at selected time ';
+      /*let now = new Date();
       let start = this.seats_available_soon[0].availability[0].start;
       let delta = Math.ceil((start.getTime() - now.getTime()) / (60 * 1000));
-      result += ` ${delta} minutes`;
+      result += ` ${delta} minutes`;*/
     } else {
       return 'None available';
     }
