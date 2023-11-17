@@ -70,6 +70,8 @@ export class ReservationCard {
     });
   }
   selectDateTime() {
-    this.searchClicked.emit();
+    if (this.currentDate != undefined && this.currentTime != undefined) {
+      this.searchClicked.emit();
+    }
   }
 }
