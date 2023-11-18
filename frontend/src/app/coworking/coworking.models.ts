@@ -19,9 +19,10 @@ export interface OperatingHours extends TimeRange {
 }
 
 export const parseTimeRange = (json: TimeRangeJSON): TimeRange => {
+  const current = new Date(json.start);
   return {
     start: new Date(json.start),
-    end: new Date(json.end)
+    end: new Date(current.getTime() + 2 * (60 * 60 * 1000))
   };
 };
 
