@@ -76,11 +76,10 @@ class StatusService:
         my_reservations = self._reservation_svc.get_current_reservations_for_user(
             subject, subject
         )
-
-        now = datetime.now() + timedelta(days=1)
         walkin_window = TimeRange(
             start=now,
-            end=now
+            end=datetime.now()
+            + timedelta(days=1)
             + self._policies_svc.walkin_window(subject)
             + 3 * self._policies_svc.walkin_initial_duration(subject),
             # We triple walkin duration for end bounds to find seats not pre-reserved later. If XL stays
