@@ -12,6 +12,7 @@ const routes: Routes = [
   AboutComponent.Route,
   ProfileEditorComponent.Route,
   GateComponent.Route,
+  ReservePageComponent.Route,
 
   {
     path: 'coworking',
