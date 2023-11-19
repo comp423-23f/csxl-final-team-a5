@@ -8,7 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { DateTimeService } from '../../date-time.service';
 
 interface Time {
   value: string;
@@ -55,7 +54,7 @@ export class ReservationCard {
 
   @Output() searchClicked = new EventEmitter<void>();
 
-  constructor(private dateTimeService: DateTimeService) {
+  constructor() {
     const today = new Date();
     this.minDate = today; // min date is today
 
@@ -85,7 +84,6 @@ export class ReservationCard {
       this.formattedDateTimeChange.emit(combinedDateTime);
 
       this.searchClicked.emit();
-      this.dateTimeService.setFormattedDateTime(combinedDateTime);
     } else {
       console.log('Please select both date and time.');
     }

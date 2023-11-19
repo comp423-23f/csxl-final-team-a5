@@ -10,7 +10,6 @@ import { Seat, SeatAvailability } from 'src/app/coworking/coworking.models';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
-import { DateTimeService } from 'src/app/reserve/date-time.service';
 
 class SeatCategory {
   public title: string;
@@ -86,11 +85,8 @@ export class ReserveAvailibilityCard implements OnChanges {
 
   public categories: SeatCategory[];
 
-  constructor(private dateTimeService: DateTimeService) {
+  constructor() {
     this.categories = this.initCategories();
-    this.dateTimeService.formattedDateTime.subscribe((date: Date) => {
-      console.log('User Selected:', date);
-    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
