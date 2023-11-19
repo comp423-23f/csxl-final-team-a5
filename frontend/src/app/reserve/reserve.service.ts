@@ -66,14 +66,21 @@ export class ReserveService implements OnDestroy {
 
     let start = new Date(selectedTime.getTime() - 5 * ONE_HOUR);
     let end = new Date(start.getTime() + 2 * ONE_HOUR);
-    console.log(start.toISOString());
-    console.log(end.toISOString());
+    let start_str = start.toISOString();
+    start_str = start_str.slice(0, -1);
+    start_str += '0';
+
+    let end_str = end.toISOString();
+    end_str = end_str.slice(0, -1);
+    end_str += '0';
+    console.log(start_str);
+    console.log(end_str);
 
     return this.http
       .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {
         params: {
-          start: start.toISOString(),
-          end: end.toISOString()
+          start: start_str,
+          end: end_str
         }
       })
       .pipe(
