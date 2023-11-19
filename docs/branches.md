@@ -180,3 +180,4 @@ git push origin merge/upstream/main
 ~~~
 
 At this point, create a PR for a team member to approve to merge in upstream changes and catch your stage branch up. When merging this PR, you are encouraged to use the strategy of creating a merge commit rather than squashing and merging.
+

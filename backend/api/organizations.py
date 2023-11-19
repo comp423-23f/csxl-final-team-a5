@@ -2,8 +2,10 @@
 
 Organization routes are used to create, retrieve, and update Organizations."""
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
+from ..services.organization import OrganizationNotFoundException
+from ..services.permission import UserPermissionException
 from ..services import OrganizationService
 from ..models.organization import Organization
 from ..models.organization_details import OrganizationDetails
@@ -60,7 +62,12 @@ def new_organization(
         HTTPException 422 if create() raises an Exception
     """
 
-    return organization_service.create(subject, organization)
+    try:
+        # Try to create and return new organization
+        return organization_service.create(subject, organization)
+    except Exception as e:
+        # Raise 422 exception if creation fails (request body is shaped incorrectly / not authorized)
+        raise HTTPException(status_code=422, detail=str(e))
 
 
 @api.get(
@@ -86,7 +93,13 @@ def get_organization_from_slug(
         HTTPException 404 if get_from_slug() raises an Exception
     """
 
-    return organization_service.get_from_slug(slug)
+    # Try to get organization with matching slug
+    try:
+        # Return organization
+        return organization_service.get_from_slug(slug)
+    except OrganizationNotFoundException as e:
+        # Raise 404 exception if search fails (no response)
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @api.put(
@@ -114,15 +127,19 @@ def update_organization(
     Raises:
         HTTPException 404 if update() raises an Exception
     """
-
-    return organization_service.update(subject, organization)
+    try:
+        # Return updated organization
+        return organization_service.update(subject, organization)
+    except (OrganizationNotFoundException, UserPermissionException) as e:
+        # Raise 404 exception if update fails (organization does not exist / not authorized)
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @api.delete("/{slug}", response_model=None, tags=["Organizations"])
 def delete_organization(
     slug: str,
     subject: User = Depends(registered_user),
-    organization_service: OrganizationService = Depends(),
+    organization_service=Depends(OrganizationService),
 ):
     """
     Delete organization based on slug
@@ -136,4 +153,9 @@ def delete_organization(
         HTTPException 404 if delete() raises an Exception
     """
 
-    organization_service.delete(subject, slug)
+    try:
+        # Try to delete organization
+        organization_service.delete(subject, slug)
+    except OrganizationNotFoundException as e:
+        # Raise 404 exception if delete fails (organization does not exist / not authorized)
+        raise HTTPException(status_code=404, detail=str(e))
