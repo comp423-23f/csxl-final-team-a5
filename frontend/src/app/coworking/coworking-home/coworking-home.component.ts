@@ -25,9 +25,11 @@ import {
   map,
   mergeMap,
   of,
-  timer
+  timer,
+  tap
 } from 'rxjs';
 import { ReservationService } from '../reservation/reservation.service';
+import { AmbassadorService } from '../ambassador-home/ambassador.service';
 
 @Component({
   selector: 'app-coworking-home',
@@ -54,6 +56,7 @@ export class CoworkingPageComponent implements OnInit, OnDestroy {
   };
 
   constructor(
+    public ambassadorService: AmbassadorService,
     route: ActivatedRoute,
     public coworkingService: CoworkingService,
     private router: Router,
