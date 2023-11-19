@@ -46,7 +46,7 @@ export const organizationDetailResolver: ResolveFn<Organization | undefined> = (
       heel_life: '',
       public: false,
       events: null
-    };
+    }
   }
 
   // Otherwise, return the organization.

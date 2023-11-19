@@ -95,7 +95,7 @@ export class EventEditorComponent {
 
     // Get ids from the url
     let organization_slug = this.route.snapshot.params['slug'];
-    this.organization_slug = organization_slug;
+    this.organization_slug = organization_slug;    
 
     // Set values for form group
     this.eventForm.setValue({

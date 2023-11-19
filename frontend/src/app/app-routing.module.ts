@@ -5,17 +5,25 @@ import { GateComponent } from './gate/gate.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileEditorComponent } from './profile/profile-editor/profile-editor.component';
 import { AboutComponent } from './about/about.component';
+import { ReservePageComponent } from './reserve/reserve-page/reserve-page.component';
 
 const routes: Routes = [
   HomeComponent.Route,
   AboutComponent.Route,
   ProfileEditorComponent.Route,
   GateComponent.Route,
+
   {
     path: 'coworking',
     title: 'Cowork in the XL',
     loadChildren: () =>
       import('./coworking/coworking.module').then((m) => m.CoworkingModule)
+  },
+  {
+    path: 'reserve',
+    title: 'Create a Reservation',
+    loadChildren: () =>
+      import('./reserve/reserve.module').then((m) => m.ReserveModule)
   },
   {
     path: 'admin',
