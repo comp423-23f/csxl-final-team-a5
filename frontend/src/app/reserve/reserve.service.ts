@@ -64,8 +64,10 @@ export class ReserveService implements OnDestroy {
       throw new Error('Only allowed for logged in users.');
     }
 
-    let start = selectedTime;
+    let start = new Date(selectedTime.getTime() - 5 * ONE_HOUR);
     let end = new Date(start.getTime() + 2 * ONE_HOUR);
+    console.log(start.toISOString());
+    console.log(end.toISOString());
 
     return this.http
       .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {

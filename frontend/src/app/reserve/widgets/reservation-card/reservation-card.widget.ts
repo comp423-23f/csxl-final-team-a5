@@ -31,7 +31,7 @@ interface Time {
   ]
 })
 export class ReservationCard {
-  @Output() formattedDateTimeChange = new EventEmitter<Date>();
+  @Output() searchClicked = new EventEmitter<Date>();
 
   times: Time[] = [
     { value: '10:00am' },
@@ -52,8 +52,6 @@ export class ReservationCard {
   currentTime: string | undefined;
 
   formattedDateTime: string | undefined;
-
-  @Output() searchClicked = new EventEmitter<void>();
 
   constructor() {
     const today = new Date();
@@ -82,9 +80,7 @@ export class ReservationCard {
       );
       console.log('Selected Date and Time:', combinedDateTime);
 
-      this.formattedDateTimeChange.emit(combinedDateTime);
-
-      this.searchClicked.emit();
+      this.searchClicked.emit(combinedDateTime);
     } else {
       console.log('Please select both date and time.');
     }
