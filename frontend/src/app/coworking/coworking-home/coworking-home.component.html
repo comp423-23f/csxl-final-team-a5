@@ -1,4 +1,5 @@
 <div class="coworking-reservations-grid">
+  <!-- Open Hours / Active Reservations / Dropin -->
   <ng-container *ngIf="status$ | async as status">
     <ng-container
       *ngIf="openOperatingHours$ | async as openOperatingHours; else closed">
@@ -20,10 +21,7 @@
         </div>
       </ng-template>
     </ng-container>
-    <div class="upcomingreservations-card-container">
-      <upcoming-reservations-card> </upcoming-reservations-card>
-    </div>
-
+    <upcoming-reservations-card></upcoming-reservations-card>
     <ng-template #closed>
       <coworking-operating-hours-panel
         [operatingHours]="status.operating_hours" />

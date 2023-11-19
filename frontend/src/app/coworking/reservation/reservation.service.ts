@@ -7,14 +7,25 @@ import {
   parseReservationJSON
 } from '../coworking.models';
 import { RxReservation } from './rx-reservation';
+import { RxReservations } from '../ambassador-home/rx-reservations';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationService {
   private reservations: Map<number, RxReservation> = new Map();
-
+  private current_reservations: RxReservations = new RxReservations();
+  public reservations$: Observable<Reservation[]> =
+    this.current_reservations.value$;
   constructor(private http: HttpClient) {}
+
+  fetchUpcomingReservations(): void {
+    this.http
+      .get<ReservationJSON[]>('/api/reserve/upcoming')
+      .subscribe((reservations) => {
+        this.current_reservations.set(reservations.map(parseReservationJSON));
+      });
+  }
 
   get(id: number): Observable<Reservation> {
     let reservation = this.getRxReservation(id);
@@ -32,6 +43,21 @@ export class ReservationService {
         rxReservation.set(reservation);
       })
     );
+  }
+  cancel_rx(reservation: Reservation) {
+    this.http
+      .put<ReservationJSON>(`/api/coworking/reservation/${reservation.id}`, {
+        id: reservation.id,
+        state: 'CANCELLED'
+      })
+      .subscribe({
+        next: (_) => {
+          this.current_reservations.remove(reservation);
+        },
+        error: (err) => {
+          alert(err);
+        }
+      });
   }
 
   confirm(reservation: Reservation) {
