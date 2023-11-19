@@ -1,15 +1,15 @@
 # Retrieve Future Availability
 
 > Written by Bernie Chen, Kene Ochuba, Lucas Siegel, and Sunny Wang for the final project of COMP 423: Foundations of Software Engineering.<br>
-> Last Updated: 11/12/2023
+> Last Updated: 11/19/2023
 
 ## New Route
 
-We added a new **/api/coworking/status/reserve** route in the backend API that calls a new **get_coworking_status_reserve** method in the backend service in coworking, which takes in a specified date to retrieve the status of the available seat. This status is returned to the original **pollStatus** function that is called in the frontend reserve service, which is responsible for populating the selectable seat reservation options.
+We added a new **/api/reserve/availability** route in the backend API that calls a new **get_available_seats** method in the backend service in reserve.py, which takes in a specified date to retrieve a list of available seats. This list is returned to the original **searchAvailableSeats** function that is called in the frontend reserve service, which is responsible for populating the selectable seat reservation options.
 
 ## Database/Entity-level Representation
 
-We use the same data representations already implemented for coworking drop-ins for future reservations.
+We use the same data representations already implemented for coworking drop-ins for future reservations. These include SeatAvailabilityJSON and TimeRangeJSON models that the front end retrieves from the new api route which are then converted to SeatAvailability and TimeRange models for use.
 
 ## Technical and User Experience Design Choice
 
