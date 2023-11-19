@@ -8,8 +8,11 @@ import {
   Reservation,
   ReservationJSON,
   SeatAvailability,
+  SeatAvailabilityJSON,
+  TimeRange,
   parseCoworkingStatusJSON,
-  parseReservationJSON
+  parseReservationJSON,
+  parseSeatAvailabilityJSON
 } from '../coworking/coworking.models';
 import { ProfileService } from '../profile/profile.service';
 import { Profile } from '../models.module';
@@ -54,6 +57,28 @@ export class ReserveService implements OnDestroy {
       )
       .pipe(map(parseCoworkingStatusJSON))
       .subscribe((status) => this.status.set(status));
+  }
+
+  searchAvailability(selectedTime: Date) {
+    if (this.profile === undefined) {
+      throw new Error('Only allowed for logged in users.');
+    }
+
+    let start = selectedTime;
+    let end = new Date(start.getTime() + 2 * ONE_HOUR);
+
+    return this.http
+      .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {
+        params: {
+          start: start.toISOString(),
+          end: end.toISOString()
+        }
+      })
+      .pipe(
+        map((seatAvailability) =>
+          seatAvailability.map(parseSeatAvailabilityJSON)
+        )
+      );
   }
 
   draftReservation(seatSelection: SeatAvailability[]) {

@@ -19,6 +19,7 @@ import { CoworkingHoursCard } from '../coworking/widgets/operating-hours-panel/o
 import { CoworkingDropInCard } from '../coworking/widgets/dropin-availability-card/dropin-availability-card.widget';
 import { CoworkingReservationCard } from '../coworking/widgets/coworking-reservation-card/coworking-reservation-card';
 import { CoworkingModule } from '../coworking/coworking.module';
+import { ReserveAvailibilityCard } from './widgets/reservation-card/reserve-availability-card/reserve-availability-card.widget';
 
 @NgModule({
   declarations: [ReservePageComponent],
@@ -37,7 +38,8 @@ import { CoworkingModule } from '../coworking/coworking.module';
     MatTableModule,
     FormsModule,
     ReactiveFormsModule,
-    ReservationCard
+    ReservationCard,
+    ReserveAvailibilityCard
   ]
 })
 export class ReserveModule {}

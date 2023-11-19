@@ -2,9 +2,11 @@
 
 Reserve routes are used to create, retrieve, and update Reservations."""
 
-import datetime
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from typing import Sequence
+
+from backend.services.coworking.seat import SeatService
 from ..api.authentication import registered_user
 from backend.models.coworking.time_range import TimeRange
 from backend.services.coworking.operating_hours import OperatingHoursService
@@ -42,22 +44,17 @@ def draft_reservation(
     return reservation_svc.draft_reservation(subject, reservation_request)
 
 
-@api.get("", tags=["Reserve"])
+@api.get("/availability", tags=["Reserve"])
 def get_available_seats(
+    start: datetime,
+    end: datetime,
     reservation_svc: ReservationService = Depends(),
-    operating_svc: OperatingHoursService = Depends(),
-    seats: Sequence[Seat] = seats,
-    bounds: TimeRange = TimeRange(
-        start=datetime.datetime.now(),
-        end=datetime.datetime.now() + datetime.timedelta(7),
-    ),
-) -> dict[int, SeatAvailability]:
+    seat_svc: SeatService = Depends(),
+) -> Sequence[SeatAvailability]:
     """Get the available seats based on the date and time input."""
-    operating_hours = operating_svc.schedule(bounds)
-    availability = reservation_svc._operating_hours_to_bounded_availability_list(
-        operating_hours, bounds
-    )
-    return reservation_svc._initialize_seat_availability_dict(seats, availability)
+    availability_request = TimeRange(start=start, end=end)
+    seats = seat_svc.list()
+    return reservation_svc.seat_availability(seats, availability_request)
 
 
 @api.get("/upcoming", tags=["Reserve"])

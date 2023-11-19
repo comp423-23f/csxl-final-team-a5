@@ -43,12 +43,13 @@ export class ReservePageComponent implements OnInit, OnDestroy {
   public formattedDateTime: string | undefined;
 
   public status$: Observable<CoworkingStatus>;
+  public seatAvailability: SeatAvailability[] | undefined;
 
   public openOperatingHours$: Observable<OperatingHours | undefined>;
   public isOpen$: Observable<boolean>;
 
   public activeReservation$: Observable<Reservation | undefined>;
-
+  public searching: boolean;
   private timerSubscription!: Subscription;
 
   /** Route information to be used in Organization Routing Module */
@@ -71,12 +72,26 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     this.openOperatingHours$ = this.initNextOperatingHours();
     this.isOpen$ = this.initIsOpen();
     this.activeReservation$ = this.initActiveReservation();
+    this.searching = false;
+  }
+
+  onSearchClicked() {
+    this.searching = true;
+    console.log('Retrieving', this.searching);
   }
 
   reserve(seatSelection: SeatAvailability[]) {
     this.reserveService.draftReservation(seatSelection).subscribe({
       next: (reservation) => {
         this.router.navigateByUrl(`/coworking/reservation/${reservation.id}`);
+      }
+    });
+  }
+
+  search(selectedTime: Date) {
+    this.reserveService.searchAvailability(selectedTime).subscribe({
+      next: (availability) => {
+        this.seatAvailability = availability;
       }
     });
   }

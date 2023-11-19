@@ -11,13 +11,14 @@
         [min]="minDate"
         [max]="maxDate"
         [matDatepicker]="picker"
-        [formControl]="selectedDate" />
+        [formControl]="selectedDate"
+        required />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Choose a time</mat-label>
-      <mat-select [formControl]="selectedTime">
+      <mat-select [formControl]="selectedTime" required>
         <mat-option *ngFor="let time of times" [value]="time.value">{{
           time.value
         }}</mat-option>
