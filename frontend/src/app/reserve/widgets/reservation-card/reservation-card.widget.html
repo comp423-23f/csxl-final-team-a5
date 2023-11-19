@@ -24,8 +24,11 @@
         }}</mat-option>
       </mat-select>
     </mat-form-field>
-    <button id="availabilityButton" (click)="selectDateTime()">
-      Get Seat Availability
+    <button
+      mat-stroked-button
+      class="availabilityButton"
+      (click)="selectDateTime()">
+      Search Availability
     </button>
   </mat-card-content>
 </mat-card>
