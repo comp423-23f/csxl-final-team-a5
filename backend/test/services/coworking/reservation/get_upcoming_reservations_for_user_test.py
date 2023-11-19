@@ -34,12 +34,6 @@ __copyright__ = "Copyright 2023"
 __license__ = "MIT"
 
 
-""" We will need to add more tests, but right now lets check with Kris if we're allowed to change the dummy
-    data since we can't really change anything there right now as it will mess with his other tests for 
-    get_current_reservations_for_user. For now, the tests ensure that the function runs properly given 
-    the current dummy data, and since the function is so similar to get_current the tests are mostly the same."""
-
-
 def test_get_upcoming_reservations_for_user_as_user(
     reservation_svc: ReservationService,
 ):

@@ -86,9 +86,7 @@ class StatusService:
             start=now, end=now + self._policies_svc.reservation_window(subject)
         )
         seats = self._seat_svc.list()  # All Seats are fair game for walkin purposes
-        seat_availability = self._reservation_svc.seat_availability(
-            seats, walkin_window
-        )
+        seat_availability = self._reservation_svc.seat_availability(seats, all_window)
 
         operating_hours = self._operating_hours_svc.schedule(
             TimeRange(
