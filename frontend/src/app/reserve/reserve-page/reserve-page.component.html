@@ -1,6 +1,6 @@
 <div class="reserve-grid">
   <div class="reserve-card">
-    <reserve-card (searchClicked)="search($event)"></reserve-card>
+    <reserve-card (searchClicked)="searchAvailableSeats($event)"></reserve-card>
   </div>
   <div class="coworking-reservations-grid">
     <ng-container *ngIf="status$ | async as status">

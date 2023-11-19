@@ -65,12 +65,6 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     this.seatAvailability = [];
   }
 
-  onSearchClicked(selectedTime: Date) {
-    this.searching = true;
-    console.log('Retrieving', this.searching);
-    this.search(selectedTime);
-  }
-
   reserve(seatSelection: SeatAvailability[]) {
     this.reserveService.draftReservation(seatSelection).subscribe({
       next: (reservation) => {
@@ -79,7 +73,7 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     });
   }
 
-  search(selectedTime: Date) {
+  searchAvailableSeats(selectedTime: Date) {
     this.searching = true;
     console.log('Retrieving', this.searching);
     this.reserveService.searchAvailability(selectedTime).subscribe({
