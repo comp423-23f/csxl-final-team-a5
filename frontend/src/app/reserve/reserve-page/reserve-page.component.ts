@@ -15,24 +15,14 @@ import { Route, ActivatedRoute, Router } from '@angular/router';
 import { ReserveService } from '../reserve.service';
 import { isAuthenticated } from 'src/app/gate/gate.guard';
 import { profileResolver } from 'src/app/profile/profile.resolver';
-import { CoworkingService } from '../../coworking/coworking.service';
 import {
   CoworkingStatus,
   OperatingHours,
   Reservation,
   SeatAvailability
 } from '../../coworking/coworking.models';
-import {
-  Observable,
-  Subscription,
-  filter,
-  map,
-  mergeMap,
-  of,
-  timer
-} from 'rxjs';
+import { Observable, Subscription, map, mergeMap, of, timer } from 'rxjs';
 import { ReservationService } from '../../coworking/reservation/reservation.service';
-import { ReservationCard } from '../widgets/reservation-card/reservation-card.widget';
 
 @Component({
   selector: 'app-reserve-page',
@@ -64,7 +54,6 @@ export class ReservePageComponent implements OnInit, OnDestroy {
   constructor(
     route: ActivatedRoute,
     public reserveService: ReserveService,
-    // public coworkingService: CoworkingService,
     private router: Router,
     private reservationService: ReservationService
   ) {
@@ -104,11 +93,6 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     this.timerSubscription = timer(0, 10000).subscribe(() => {
       this.reserveService.pollStatus();
     });
-  }
-
-  onFormattedDateTimeChange(formattedDateTime: string) {
-    this.formattedDateTime = formattedDateTime;
-    this.reserveService.pollStatusRefresh(formattedDateTime);
   }
 
   ngOnDestroy(): void {

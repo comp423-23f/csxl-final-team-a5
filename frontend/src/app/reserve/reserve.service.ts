@@ -5,11 +5,9 @@ import { Observable, Subscription, map, tap } from 'rxjs';
 import {
   CoworkingStatus,
   CoworkingStatusJSON,
-  Reservation,
   ReservationJSON,
   SeatAvailability,
   SeatAvailabilityJSON,
-  TimeRange,
   parseCoworkingStatusJSON,
   parseReservationJSON,
   parseSeatAvailabilityJSON
@@ -45,16 +43,6 @@ export class ReserveService implements OnDestroy {
   pollStatus(): void {
     this.http
       .get<CoworkingStatusJSON>('/api/coworking/status')
-      .pipe(map(parseCoworkingStatusJSON))
-      .subscribe((status) => this.status.set(status));
-  }
-
-  pollStatusRefresh(dateTime: string): void {
-    console.log(`/api/coworking/status/reserve?date_time=${dateTime}`);
-    this.http
-      .get<CoworkingStatusJSON>(
-        `/api/coworking/status/reserve?date_time=${dateTime}`
-      )
       .pipe(map(parseCoworkingStatusJSON))
       .subscribe((status) => this.status.set(status));
   }
