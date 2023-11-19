@@ -31,6 +31,8 @@ interface Time {
   ]
 })
 export class ReservationCard {
+  @Output() searchClicked = new EventEmitter<Date>();
+
   times: Time[] = [
     { value: '10:00am' },
     { value: '11:00am' },
@@ -38,8 +40,8 @@ export class ReservationCard {
     { value: '1:00pm' },
     { value: '2:00pm' },
     { value: '3:00pm' },
-    { value: '4:00pm' },
-    { value: '5:00pm' }
+    { value: '4:00pm' }
+    //ends at 4pm because we are only supporting 2-hr reservations and xl closes at 6
   ];
   minDate: Date;
   maxDate: Date;
@@ -47,9 +49,9 @@ export class ReservationCard {
   selectedDate: FormControl = new FormControl();
 
   currentDate: Date | undefined;
-  currentTime: Date | undefined;
+  currentTime: string | undefined;
 
-  @Output() searchClicked = new EventEmitter<void>();
+  formattedDateTime: string | undefined;
 
   constructor() {
     const today = new Date();
@@ -58,7 +60,7 @@ export class ReservationCard {
     const twoWeeksFromNow = new Date();
     twoWeeksFromNow.setDate(today.getDate() + 7); // add 7 days to the current date
     this.maxDate = twoWeeksFromNow; // max date is two weeks from now
-    console.log(this.times);
+
     this.selectedTime.valueChanges.subscribe((value) => {
       console.log('Selected Time:', value);
       this.currentTime = value;
@@ -70,6 +72,36 @@ export class ReservationCard {
     });
   }
   selectDateTime() {
-    this.searchClicked.emit();
+    if (this.currentDate && this.currentTime) {
+      // Combine date and time into one Date object
+      const combinedDateTime = this.combineDateTime(
+        this.currentDate,
+        this.currentTime
+      );
+      console.log('Selected Date and Time:', combinedDateTime);
+
+      this.searchClicked.emit(combinedDateTime);
+    } else {
+      console.log('Please select both date and time.');
+    }
+  }
+
+  private combineDateTime(date: Date, time: string): Date {
+    const hour = this.extractHourFromTime(time);
+    const minute = this.extractMinuteFromTime(time);
+
+    //combine date and time
+    date.setHours(hour, minute);
+
+    return date;
+  }
+
+  private extractHourFromTime(time: string): number {
+    const hour = parseInt(time.split(':')[0], 10);
+    return time.includes('pm') && hour !== 12 ? hour + 12 : hour;
+  }
+
+  private extractMinuteFromTime(time: string): number {
+    return parseInt(time.split(':')[1], 10);
   }
 }

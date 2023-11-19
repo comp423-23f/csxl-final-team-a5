@@ -15,22 +15,13 @@ import { Route, ActivatedRoute, Router } from '@angular/router';
 import { ReserveService } from '../reserve.service';
 import { isAuthenticated } from 'src/app/gate/gate.guard';
 import { profileResolver } from 'src/app/profile/profile.resolver';
-import { CoworkingService } from '../../coworking/coworking.service';
 import {
   CoworkingStatus,
   OperatingHours,
   Reservation,
   SeatAvailability
 } from '../../coworking/coworking.models';
-import {
-  Observable,
-  Subscription,
-  filter,
-  map,
-  mergeMap,
-  of,
-  timer
-} from 'rxjs';
+import { Observable, Subscription, map, mergeMap, of, timer } from 'rxjs';
 import { ReservationService } from '../../coworking/reservation/reservation.service';
 
 @Component({
@@ -39,7 +30,10 @@ import { ReservationService } from '../../coworking/reservation/reservation.serv
   styleUrls: ['./reserve-page.component.css']
 })
 export class ReservePageComponent implements OnInit, OnDestroy {
+  public formattedDateTime: string | undefined;
+
   public status$: Observable<CoworkingStatus>;
+  public seatAvailability: SeatAvailability[];
 
   public openOperatingHours$: Observable<OperatingHours | undefined>;
   public isOpen$: Observable<boolean>;
@@ -60,7 +54,6 @@ export class ReservePageComponent implements OnInit, OnDestroy {
   constructor(
     route: ActivatedRoute,
     public reserveService: ReserveService,
-    // public coworkingService: CoworkingService,
     private router: Router,
     private reservationService: ReservationService
   ) {
@@ -69,11 +62,13 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     this.isOpen$ = this.initIsOpen();
     this.activeReservation$ = this.initActiveReservation();
     this.searching = false;
+    this.seatAvailability = [];
   }
 
-  onSearchClicked() {
+  onSearchClicked(selectedTime: Date) {
     this.searching = true;
     console.log('Retrieving', this.searching);
+    this.search(selectedTime);
   }
 
   reserve(seatSelection: SeatAvailability[]) {
@@ -84,10 +79,20 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     });
   }
 
+  search(selectedTime: Date) {
+    this.searching = true;
+    console.log('Retrieving', this.searching);
+    this.reserveService.searchAvailability(selectedTime).subscribe({
+      next: (availability) => {
+        this.seatAvailability = availability;
+      }
+    });
+  }
+
   ngOnInit(): void {
-    this.timerSubscription = timer(0, 10000).subscribe(() =>
-      this.reserveService.pollStatus()
-    );
+    this.timerSubscription = timer(0, 10000).subscribe(() => {
+      this.reserveService.pollStatus();
+    });
   }
 
   ngOnDestroy(): void {

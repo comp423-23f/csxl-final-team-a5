@@ -5,11 +5,12 @@ import { Observable, Subscription, map, tap } from 'rxjs';
 import {
   CoworkingStatus,
   CoworkingStatusJSON,
-  Reservation,
   ReservationJSON,
   SeatAvailability,
+  SeatAvailabilityJSON,
   parseCoworkingStatusJSON,
-  parseReservationJSON
+  parseReservationJSON,
+  parseSeatAvailabilityJSON
 } from '../coworking/coworking.models';
 import { ProfileService } from '../profile/profile.service';
 import { Profile } from '../models.module';
@@ -39,12 +40,42 @@ export class ReserveService implements OnDestroy {
   ngOnDestroy(): void {
     this.profileSubscription.unsubscribe();
   }
-
   pollStatus(): void {
     this.http
-      .get<CoworkingStatusJSON>('/api/coworking/status/reserve')
+      .get<CoworkingStatusJSON>('/api/coworking/status')
       .pipe(map(parseCoworkingStatusJSON))
       .subscribe((status) => this.status.set(status));
+  }
+
+  searchAvailability(selectedTime: Date) {
+    if (this.profile === undefined) {
+      throw new Error('Only allowed for logged in users.');
+    }
+
+    let start = new Date(selectedTime.getTime() - 5 * ONE_HOUR);
+    let end = new Date(start.getTime() + 2 * ONE_HOUR);
+    let start_str = start.toISOString();
+    start_str = start_str.slice(0, -1);
+    start_str += '0';
+
+    let end_str = end.toISOString();
+    end_str = end_str.slice(0, -1);
+    end_str += '0';
+    console.log(start_str);
+    console.log(end_str);
+
+    return this.http
+      .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {
+        params: {
+          start: start_str,
+          end: end_str
+        }
+      })
+      .pipe(
+        map((seatAvailability) =>
+          seatAvailability.map(parseSeatAvailabilityJSON)
+        )
+      );
   }
 
   draftReservation(seatSelection: SeatAvailability[]) {
