@@ -20,9 +20,11 @@ import { CoworkingDropInCard } from '../coworking/widgets/dropin-availability-ca
 import { CoworkingReservationCard } from '../coworking/widgets/coworking-reservation-card/coworking-reservation-card';
 import { CoworkingModule } from '../coworking/coworking.module';
 import { ReserveAvailibilityCard } from './widgets/reservation-card/reserve-availability-card/reserve-availability-card.widget';
+import { DateTimeService } from './date-time.service';
+import { ConfirmReservationCard } from './widgets/reservation-card/confirm-reservation-card/confirm-reservation-card.widget';
 
 @NgModule({
-  declarations: [ReservePageComponent],
+  declarations: [ReservePageComponent, ConfirmReservationCard],
   imports: [
     CommonModule,
     CoworkingModule,
@@ -40,6 +42,7 @@ import { ReserveAvailibilityCard } from './widgets/reservation-card/reserve-avai
     ReactiveFormsModule,
     ReservationCard,
     ReserveAvailibilityCard
-  ]
+  ],
+  providers: [DateTimeService]
 })
 export class ReserveModule {}
