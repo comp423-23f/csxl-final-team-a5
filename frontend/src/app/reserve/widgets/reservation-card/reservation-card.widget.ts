@@ -31,7 +31,7 @@ interface Time {
   ]
 })
 export class ReservationCard {
-  @Output() formattedDateTimeChange = new EventEmitter<string>();
+  @Output() formattedDateTimeChange = new EventEmitter<Date>();
 
   times: Time[] = [
     { value: '10:00am' },
@@ -75,31 +75,29 @@ export class ReservationCard {
   }
   selectDateTime() {
     if (this.currentDate && this.currentTime) {
-      // Combine date and time into one string with the desired format
-      this.formattedDateTime = this.formatDateTime(
+      // Combine date and time into one Date object
+      const combinedDateTime = this.combineDateTime(
         this.currentDate,
         this.currentTime
       );
-      console.log('Selected Date and Time:', this.formattedDateTime);
-      // You can use formattedDateTime for further processing or display
+      console.log('Selected Date and Time:', combinedDateTime);
+
+      this.formattedDateTimeChange.emit(combinedDateTime);
+
       this.searchClicked.emit();
     } else {
       console.log('Please select both date and time.');
     }
   }
-  private formatDateTime(date: Date, time: string): string {
-    const formattedDate = `${date.getFullYear()}-${this.padZero(
-      date.getMonth() + 1
-    )}-${this.padZero(date.getDate())}`;
-    const formattedTime = `${this.extractHourFromTime(time)}:${this.padZero(
-      this.extractMinuteFromTime(time)
-    )}:00.0000`;
-    this.formattedDateTimeChange.emit(`${formattedDate}T${formattedTime}`);
-    return `${formattedDate}T${formattedTime}`;
-  }
 
-  private padZero(value: number): string {
-    return value < 10 ? `0${value}` : `${value}`;
+  private combineDateTime(date: Date, time: string): Date {
+    const hour = this.extractHourFromTime(time);
+    const minute = this.extractMinuteFromTime(time);
+
+    //combine date and time
+    date.setHours(hour, minute);
+
+    return date;
   }
 
   private extractHourFromTime(time: string): number {
