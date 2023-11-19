@@ -52,7 +52,6 @@ export class ReservationCard {
 
   currentDate: Date | undefined;
   currentTime: string | undefined;
-
   formattedDateTime: string | undefined;
 
   constructor() {
