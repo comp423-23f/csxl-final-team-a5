@@ -49,8 +49,7 @@
 
     <h3>
       <label>When</label>
-      <strong>{{ reservation.start | date: 'shortDate' }}</strong>
-      <strong> {{ reservation.start | date: 'shortTime' }}</strong> until
+      <strong>{{ reservation.start | date: 'shortTime' }}</strong> until
       <strong>{{ reservation.end | date: 'shortTime' }}</strong>
     </h3>
 
@@ -66,7 +65,9 @@
     </h3>
     <mat-divider />
 
-    <h3><label>Where</label> <strong>The XL Colab in Sitterson 156</strong></h3>
+    <h3>
+      <label>Hi Where</label> <strong>The XL Colab in Sitterson 156</strong>
+    </h3>
 
     <mat-card-actions align="end" [ngSwitch]="reservation.state">
       <ng-container *ngSwitchCase="'DRAFT'">
@@ -103,7 +104,7 @@
         <button
           mat-stroked-button
           type="submit"
-          (click)="router.navigateByUrl('/coworking')"
+          (click)="router.navigateByUrl('/reserve')"
           color="primary">
           Return to Coworking Home
         </button>
@@ -113,7 +114,7 @@
         <button
           mat-stroked-button
           type="submit"
-          (click)="router.navigateByUrl('/coworking')"
+          (click)="router.navigateByUrl('/reserve')"
           color="primary">
           Return to Coworking Home
         </button>

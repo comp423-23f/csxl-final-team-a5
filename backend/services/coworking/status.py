@@ -1,7 +1,7 @@
 """Reservation Service manages room and desk reservations for the XL."""
 
 from fastapi import Depends
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from ...database import db_session
 from .reservation import ReservationService
@@ -47,6 +47,7 @@ class StatusService:
             # relatively open, the walkin could then more likely be extended while it is not busy.
             # This also prioritizes _not_ placing walkins in reservable seats.
         )
+
         seats = self._seat_svc.list()  # All Seats are fair game for walkin purposes
         seat_availability = self._reservation_svc.seat_availability(
             seats, walkin_window

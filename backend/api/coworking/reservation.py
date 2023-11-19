@@ -45,11 +45,12 @@ def get_reservation(
     return reservation_svc.get_reservation(subject, id)
 
 
-@api.get("/reservationUpcoming")
+@api.get("/reservationUpcoming", tags=["Coworking"])
 def get_upcoming_reservations(
     subject: User = Depends(registered_user),
     reservation_svc: ReservationService = Depends(),
 ) -> Sequence[Reservation]:
+    """List upcoming reservations for the given User"""
     return reservation_svc.get_upcoming_reservations_for_user(subject, subject)
 
 

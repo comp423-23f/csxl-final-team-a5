@@ -10,20 +10,122 @@
  * @license MIT
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Route, ActivatedRoute, Router } from '@angular/router';
+import { ReserveService } from '../reserve.service';
+import { isAuthenticated } from 'src/app/gate/gate.guard';
+import { profileResolver } from 'src/app/profile/profile.resolver';
+import {
+  CoworkingStatus,
+  OperatingHours,
+  Reservation,
+  SeatAvailability
+} from '../../coworking/coworking.models';
+import { Observable, Subscription, map, mergeMap, of, timer } from 'rxjs';
+import { ReservationService } from '../../coworking/reservation/reservation.service';
 
 @Component({
   selector: 'app-reserve-page',
   templateUrl: './reserve-page.component.html',
   styleUrls: ['./reserve-page.component.css']
 })
-export class ReservePageComponent {
+export class ReservePageComponent implements OnInit, OnDestroy {
+  public formattedDateTime: string | undefined;
+
+  public status$: Observable<CoworkingStatus>;
+  public seatAvailability: SeatAvailability[];
+
+  public openOperatingHours$: Observable<OperatingHours | undefined>;
+  public isOpen$: Observable<boolean>;
+
+  public activeReservation$: Observable<Reservation | undefined>;
+  public searching: boolean;
+  private timerSubscription!: Subscription;
+
   /** Route information to be used in Organization Routing Module */
   public static Route = {
     path: 'reserve',
     title: 'Reserve',
     component: ReservePageComponent,
-    canActivate: []
+    canActivate: [isAuthenticated],
+    resolve: { profile: profileResolver }
   };
+
+  constructor(
+    route: ActivatedRoute,
+    public reserveService: ReserveService,
+    private router: Router,
+    private reservationService: ReservationService
+  ) {
+    this.status$ = reserveService.status$;
+    this.openOperatingHours$ = this.initNextOperatingHours();
+    this.isOpen$ = this.initIsOpen();
+    this.activeReservation$ = this.initActiveReservation();
+    this.searching = false;
+    this.seatAvailability = [];
+  }
+
+  reserve(seatSelection: SeatAvailability[]) {
+    this.reserveService.draftReservation(seatSelection).subscribe({
+      next: (reservation) => {
+        this.router.navigateByUrl(`/coworking/reservation/${reservation.id}`);
+      }
+    });
+  }
+
+  searchAvailableSeats(selectedTime: Date) {
+    this.searching = true;
+    console.log('Retrieving', this.searching);
+    this.reserveService.searchAvailability(selectedTime).subscribe({
+      next: (availability) => {
+        this.seatAvailability = availability;
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.timerSubscription = timer(0, 10000).subscribe(() => {
+      this.reserveService.pollStatus();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.timerSubscription.unsubscribe();
+  }
+
+  private initNextOperatingHours(): Observable<OperatingHours | undefined> {
+    return this.status$.pipe(
+      map((status) => {
+        let now = new Date();
+        now.setDate(now.getDate() + 1);
+        return status.operating_hours.find((hours) => hours.start <= now);
+      })
+    );
+  }
+
+  private initIsOpen(): Observable<boolean> {
+    return this.openOperatingHours$.pipe(
+      map((hours) => {
+        let now = new Date();
+        return hours !== undefined && hours.start <= now && hours.end > now;
+      })
+    );
+  }
+
+  private initActiveReservation(): Observable<Reservation | undefined> {
+    return this.status$.pipe(
+      map((status) => {
+        let reservations = status.my_reservations;
+        let now = new Date();
+        return reservations.find(
+          (reservation) => reservation.start <= now && reservation.end > now
+        );
+      }),
+      mergeMap((reservation) =>
+        reservation
+          ? this.reservationService.get(reservation.id)
+          : of(undefined)
+      )
+    );
+  }
 }

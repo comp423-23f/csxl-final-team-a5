@@ -2,6 +2,7 @@
 
 This API is used to retrieve and update a user's profile."""
 
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends
 from ..authentication import registered_user
 from ...services.coworking import StatusService
