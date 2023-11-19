@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,6 +31,8 @@ interface Time {
   ]
 })
 export class ReservationCard {
+  @Output() formattedDateTimeChange = new EventEmitter<string>();
+
   times: Time[] = [
     { value: '10:00am' },
     { value: '11:00am' },
@@ -38,8 +40,8 @@ export class ReservationCard {
     { value: '1:00pm' },
     { value: '2:00pm' },
     { value: '3:00pm' },
-    { value: '4:00pm' },
-    { value: '5:00pm' }
+    { value: '4:00pm' }
+    //ends at 4pm because we are only supporting 2-hr reservations and xl closes at 6
   ];
   minDate: Date;
   maxDate: Date;
@@ -47,7 +49,11 @@ export class ReservationCard {
   selectedDate: FormControl = new FormControl();
 
   currentDate: Date | undefined;
-  currentTime: Date | undefined;
+  currentTime: string | undefined;
+
+  formattedDateTime: string | undefined;
+
+  @Output() searchClicked = new EventEmitter<void>();
 
   constructor() {
     const today = new Date();
@@ -56,7 +62,7 @@ export class ReservationCard {
     const twoWeeksFromNow = new Date();
     twoWeeksFromNow.setDate(today.getDate() + 7); // add 7 days to the current date
     this.maxDate = twoWeeksFromNow; // max date is two weeks from now
-    console.log(this.times);
+
     this.selectedTime.valueChanges.subscribe((value) => {
       console.log('Selected Time:', value);
       this.currentTime = value;
@@ -67,5 +73,41 @@ export class ReservationCard {
       this.currentDate = current;
     });
   }
-  selectDateTime() {}
+  selectDateTime() {
+    if (this.currentDate && this.currentTime) {
+      // Combine date and time into one string with the desired format
+      this.formattedDateTime = this.formatDateTime(
+        this.currentDate,
+        this.currentTime
+      );
+      console.log('Selected Date and Time:', this.formattedDateTime);
+      // You can use formattedDateTime for further processing or display
+      this.searchClicked.emit();
+    } else {
+      console.log('Please select both date and time.');
+    }
+  }
+  private formatDateTime(date: Date, time: string): string {
+    const formattedDate = `${date.getFullYear()}-${this.padZero(
+      date.getMonth() + 1
+    )}-${this.padZero(date.getDate())}`;
+    const formattedTime = `${this.extractHourFromTime(time)}:${this.padZero(
+      this.extractMinuteFromTime(time)
+    )}:00.0000`;
+    this.formattedDateTimeChange.emit(`${formattedDate}T${formattedTime}`);
+    return `${formattedDate}T${formattedTime}`;
+  }
+
+  private padZero(value: number): string {
+    return value < 10 ? `0${value}` : `${value}`;
+  }
+
+  private extractHourFromTime(time: string): number {
+    const hour = parseInt(time.split(':')[0], 10);
+    return time.includes('pm') && hour !== 12 ? hour + 12 : hour;
+  }
+
+  private extractMinuteFromTime(time: string): number {
+    return parseInt(time.split(':')[1], 10);
+  }
 }
