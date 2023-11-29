@@ -3,6 +3,7 @@ import { Reservation } from '../../coworking.models';
 import { Observable, map, mergeMap, timer } from 'rxjs';
 import { Router } from '@angular/router';
 import { ReservationService } from '../../reservation/reservation.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'coworking-reservation-card',
@@ -37,6 +38,10 @@ export class CoworkingReservationCard implements OnInit {
 
   checkout() {
     this.reservationService.checkout(this.reservation).subscribe();
+  }
+
+  isCurrentRoute(route: string): boolean {
+    return this.router.url !== route;
   }
 
   private initDraftConfirmationDeadline(): Observable<string> {

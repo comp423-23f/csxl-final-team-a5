@@ -34,3 +34,14 @@
     row-gap: 15px;
     column-gap: 15px;
 }
+
+@media only screen and (max-device-width: 730px) {
+    .reserve-grid {
+        display: grid;
+        padding: 24px;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        row-gap: 15px;
+        column-gap: 24px;
+    }
+}
