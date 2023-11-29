@@ -40,7 +40,7 @@ export class CoworkingReservationCard implements OnInit {
     this.reservationService.checkout(this.reservation).subscribe();
   }
 
-  isCurrentRoute(route: string): boolean {
+  isNotCurrentRoute(route: string): boolean {
     return this.router.url !== route;
   }
 

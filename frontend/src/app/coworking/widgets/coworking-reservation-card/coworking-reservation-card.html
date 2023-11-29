@@ -85,7 +85,7 @@
 
       <ng-container *ngSwitchCase="'CONFIRMED'">
         <button
-          *ngIf="isCurrentRoute('/coworking')"
+          *ngIf="isNotCurrentRoute('/coworking')"
           mat-stroked-button
           type="submit"
           (click)="router.navigateByUrl('/coworking')">
