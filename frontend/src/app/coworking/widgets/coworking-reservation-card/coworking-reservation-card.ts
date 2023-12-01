@@ -3,7 +3,6 @@ import { Reservation } from '../../coworking.models';
 import { Observable, map, mergeMap, timer } from 'rxjs';
 import { Router } from '@angular/router';
 import { ReservationService } from '../../reservation/reservation.service';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'coworking-reservation-card',
