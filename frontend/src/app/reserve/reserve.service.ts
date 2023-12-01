@@ -93,7 +93,7 @@ export class ReserveService implements OnDestroy {
     if (flag) {
       this.snackBar.open(
         'You already have a reservation at this time!',
-        'Undo',
+        'Close',
         {
           duration: 3000
         }
@@ -141,7 +141,7 @@ export class ReserveService implements OnDestroy {
     if (no_reservables) {
       this.snackBar.open(
         'These seats are currently unavailable for reservations!',
-        'Undo',
+        'Close',
         {
           duration: 3000
         }

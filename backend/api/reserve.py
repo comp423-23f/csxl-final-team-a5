@@ -56,7 +56,7 @@ def get_available_seats(
     availability_request = TimeRange(start=start, end=end)
     seats = seat_svc.list()
     if flag:
-        return
+        return reservation_svc.seat_availability([], availability_request)
     return reservation_svc.seat_availability(seats, availability_request)
 
 
