@@ -48,12 +48,15 @@ def draft_reservation(
 def get_available_seats(
     start: datetime,
     end: datetime,
+    flag: bool,
     reservation_svc: ReservationService = Depends(),
     seat_svc: SeatService = Depends(),
 ) -> Sequence[SeatAvailability]:
     """Get the available seats based on the date and time input."""
     availability_request = TimeRange(start=start, end=end)
     seats = seat_svc.list()
+    if flag:
+        return
     return reservation_svc.seat_availability(seats, availability_request)
 
 

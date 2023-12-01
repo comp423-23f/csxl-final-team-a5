@@ -5,6 +5,7 @@ import { Observable, Subscription, map, tap } from 'rxjs';
 import {
   CoworkingStatus,
   CoworkingStatusJSON,
+  Reservation,
   ReservationJSON,
   SeatAvailability,
   SeatAvailabilityJSON,
@@ -15,6 +16,7 @@ import {
 import { ProfileService } from '../profile/profile.service';
 import { Profile } from '../models.module';
 import { RxCoworkingStatus } from '../coworking/rx-coworking-status';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -30,7 +32,8 @@ export class ReserveService implements OnDestroy {
 
   public constructor(
     protected http: HttpClient,
-    protected profileSvc: ProfileService
+    protected profileSvc: ProfileService,
+    protected snackBar: MatSnackBar
   ) {
     this.profileSubscription = this.profileSvc.profile$.subscribe(
       (profile) => (this.profile = profile)
@@ -64,11 +67,45 @@ export class ReserveService implements OnDestroy {
     console.log(start_str);
     console.log(end_str);
 
+    let flag = false;
+
+    this.status$.subscribe({
+      next: (status) => {
+        let reservations = status.my_reservations;
+        for (let reservation of reservations) {
+          let res_start_adjust_gmt = new Date(
+            reservation.start.getTime() - 5 * ONE_HOUR
+          );
+          let res_end_adjust_gmt = new Date(
+            reservation.end.getTime() - 5 * ONE_HOUR
+          );
+          if (
+            (res_start_adjust_gmt >= start && res_start_adjust_gmt < end) ||
+            (res_end_adjust_gmt > start && res_end_adjust_gmt <= end)
+          ) {
+            flag = true;
+            break;
+          }
+        }
+      }
+    });
+
+    if (flag) {
+      this.snackBar.open(
+        'You already have a reservation at this time!',
+        'Undo',
+        {
+          duration: 3000
+        }
+      );
+    }
+
     return this.http
       .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {
         params: {
           start: start_str,
-          end: end_str
+          end: end_str,
+          flag: flag
         }
       })
       .pipe(
@@ -93,6 +130,23 @@ export class ReserveService implements OnDestroy {
       start,
       end
     };
+
+    let no_reservables = true;
+    for (let seat of seatSelection) {
+      if (seat.reservable == true) {
+        no_reservables = false;
+        break;
+      }
+    }
+    if (no_reservables) {
+      this.snackBar.open(
+        'These seats are currently unavailable for reservations!',
+        'Undo',
+        {
+          duration: 3000
+        }
+      );
+    }
 
     return this.http
       .post<ReservationJSON>('/api/coworking/reservation', reservation)

@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface Time {
   value: string;
@@ -54,7 +55,7 @@ export class ReservationCard {
   currentTime: string | undefined;
   formattedDateTime: string | undefined;
 
-  constructor() {
+  constructor(protected snackBar: MatSnackBar) {
     const today = new Date();
     this.minDate = today; // min date is today
 
@@ -83,7 +84,9 @@ export class ReservationCard {
 
       this.searchClicked.emit(combinedDateTime);
     } else {
-      console.log('Please select both date and time.');
+      this.snackBar.open('Please select both date and time.', 'Undo', {
+        duration: 3000
+      });
     }
   }
 
