@@ -145,7 +145,7 @@ class ReservationService:
         #
         now = datetime.now()
         time_range = TimeRange(
-            start=now,
+            start=now + timedelta(hours=1),
             end=now + self._policy_svc.reservation_window(focus),
         )
         return self._get_active_reservations_for_user(focus, time_range)

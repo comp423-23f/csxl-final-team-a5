@@ -5,6 +5,7 @@ import { Observable, Subscription, map, tap } from 'rxjs';
 import {
   CoworkingStatus,
   CoworkingStatusJSON,
+  Reservation,
   ReservationJSON,
   SeatAvailability,
   SeatAvailabilityJSON,
@@ -15,6 +16,7 @@ import {
 import { ProfileService } from '../profile/profile.service';
 import { Profile } from '../models.module';
 import { RxCoworkingStatus } from '../coworking/rx-coworking-status';
+import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
 
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -27,6 +29,9 @@ export class ReserveService implements OnDestroy {
 
   private profile: Profile | undefined;
   private profileSubscription!: Subscription;
+  private current_reservations: RxReservations = new RxReservations();
+  public reservations$: Observable<Reservation[]> =
+    this.current_reservations.value$;
 
   public constructor(
     protected http: HttpClient,
@@ -35,6 +40,28 @@ export class ReserveService implements OnDestroy {
     this.profileSubscription = this.profileSvc.profile$.subscribe(
       (profile) => (this.profile = profile)
     );
+  }
+  fetchUpcomingReservations(): void {
+    this.http
+      .get<ReservationJSON[]>('/api/reserve/upcoming')
+      .subscribe((reservations) => {
+        this.current_reservations.set(reservations.map(parseReservationJSON));
+      });
+  }
+  cancel_rx(reservation: Reservation) {
+    this.http
+      .put<ReservationJSON>(`/api/coworking/reservation/${reservation.id}`, {
+        id: reservation.id,
+        state: 'CANCELLED'
+      })
+      .subscribe({
+        next: (_) => {
+          this.current_reservations.remove(reservation);
+        },
+        error: (err) => {
+          alert(err);
+        }
+      });
   }
 
   ngOnDestroy(): void {

@@ -5,6 +5,7 @@ import { ReservationService } from '../../reservation/reservation.service';
 import { Profile } from 'src/app/models.module';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { HttpClient } from '@angular/common/http';
+import { ReserveService } from 'src/app/reserve/reserve.service';
 
 @Component({
   selector: 'upcoming-reservations-card',
@@ -18,7 +19,7 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
   columnsToDisplay = ['name', 'seat', 'date', 'start', 'end', 'actions'];
 
   private refreshSubscription!: Subscription;
-  constructor(public reservationService: ReservationService) {
+  constructor(public reservationService: ReserveService) {
     // pid = Profile.pid; take in the pid somehow
     //this.reservations$ = reservationService.get(0); //replace 0 with actual pid number
     {
