@@ -67,7 +67,7 @@ export class ReserveService implements OnDestroy {
     console.log(start_str);
     console.log(end_str);
 
-    let flag = false;
+    let reservation_at_time_flag = false;
 
     this.status$.subscribe({
       next: (status) => {
@@ -83,14 +83,14 @@ export class ReserveService implements OnDestroy {
             (res_start_adjust_gmt >= start && res_start_adjust_gmt < end) ||
             (res_end_adjust_gmt > start && res_end_adjust_gmt <= end)
           ) {
-            flag = true;
+            reservation_at_time_flag = true;
             break;
           }
         }
       }
     });
 
-    if (flag) {
+    if (reservation_at_time_flag) {
       this.snackBar.open(
         'You already have a reservation at this time!',
         'Close',
@@ -105,7 +105,7 @@ export class ReserveService implements OnDestroy {
         params: {
           start: start_str,
           end: end_str,
-          flag: flag
+          reservation_at_time_flag: reservation_at_time_flag
         }
       })
       .pipe(
