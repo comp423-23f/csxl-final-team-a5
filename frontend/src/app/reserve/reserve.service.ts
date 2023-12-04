@@ -68,23 +68,29 @@ export class ReserveService implements OnDestroy {
     console.log(end_str);
 
     let reservation_at_time_flag = false;
+    let too_many_reservations_flag = false;
 
     this.status$.subscribe({
       next: (status) => {
         let reservations = status.my_reservations;
-        for (let reservation of reservations) {
-          let res_start_adjust_gmt = new Date(
-            reservation.start.getTime() - 5 * ONE_HOUR
-          );
-          let res_end_adjust_gmt = new Date(
-            reservation.end.getTime() - 5 * ONE_HOUR
-          );
-          if (
-            (res_start_adjust_gmt >= start && res_start_adjust_gmt < end) ||
-            (res_end_adjust_gmt > start && res_end_adjust_gmt <= end)
-          ) {
-            reservation_at_time_flag = true;
-            break;
+        if (reservations.length >= 2) {
+          too_many_reservations_flag = true;
+        }
+        if (too_many_reservations_flag == false) {
+          for (let reservation of reservations) {
+            let res_start_adjust_gmt = new Date(
+              reservation.start.getTime() - 5 * ONE_HOUR
+            );
+            let res_end_adjust_gmt = new Date(
+              reservation.end.getTime() - 5 * ONE_HOUR
+            );
+            if (
+              (res_start_adjust_gmt >= start && res_start_adjust_gmt < end) ||
+              (res_end_adjust_gmt > start && res_end_adjust_gmt <= end)
+            ) {
+              reservation_at_time_flag = true;
+              break;
+            }
           }
         }
       }
@@ -100,12 +106,22 @@ export class ReserveService implements OnDestroy {
       );
     }
 
+    if (too_many_reservations_flag) {
+      this.snackBar.open(
+        'You have exceeded the maximum number of reservations at a time!',
+        'Close',
+        {
+          duration: 3000
+        }
+      );
+    }
+
     return this.http
       .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {
         params: {
           start: start_str,
           end: end_str,
-          reservation_at_time_flag: reservation_at_time_flag
+          flags: reservation_at_time_flag || too_many_reservations_flag
         }
       })
       .pipe(
