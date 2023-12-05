@@ -84,7 +84,7 @@ export class ReservationCard {
 
       this.searchClicked.emit(combinedDateTime);
     } else {
-      this.snackBar.open('Please select both date and time.', 'Undo', {
+      this.snackBar.open('Please select both date and time.', 'Close', {
         duration: 3000
       });
     }
