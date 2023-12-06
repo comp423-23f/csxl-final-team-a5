@@ -148,7 +148,34 @@ class ReservationService:
             start=now,
             end=now + self._policy_svc.reservation_window(focus),
         )
-        return self._get_active_reservations_for_user(focus, time_range)
+
+        reservations = (
+            self._session.query(ReservationEntity)
+            .join(ReservationEntity.users)
+            .filter(
+                ReservationEntity.start < time_range.end,
+                ReservationEntity.end > time_range.start,
+                ReservationEntity.state.not_in(
+                    [
+                        ReservationState.CANCELLED,
+                        ReservationState.CHECKED_OUT,
+                        ReservationState.DRAFT,
+                    ]
+                ),
+                UserEntity.id == focus.id,
+            )
+            .options(
+                joinedload(ReservationEntity.users), joinedload(ReservationEntity.seats)
+            )
+            .order_by(ReservationEntity.start)
+            .all()
+        )
+
+        reservations = self._state_transition_reservation_entities_by_time(
+            datetime.now(), reservations
+        )
+
+        return [reservation.to_model() for reservation in reservations]
 
     def _get_active_reservations_for_user(
         self, focus: UserIdentity, time_range: TimeRange
