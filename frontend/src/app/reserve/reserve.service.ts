@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { Observable, Subscription, map, tap } from 'rxjs';
+import { Observable, Subscription, map, shareReplay, tap } from 'rxjs';
 import {
   CoworkingStatus,
   CoworkingStatusJSON,
@@ -17,6 +17,7 @@ import { ProfileService } from '../profile/profile.service';
 import { Profile } from '../models.module';
 import { RxCoworkingStatus } from '../coworking/rx-coworking-status';
 import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
+import { RxReservation } from '../coworking/reservation/rx-reservation';
 
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -31,7 +32,7 @@ export class ReserveService implements OnDestroy {
   private profileSubscription!: Subscription;
   private upcoming_reservations: RxReservations = new RxReservations();
   private ongoing_reservations: RxReservations = new RxReservations();
-
+  private reservations_check: Map<number, RxReservation> = new Map();
   public reservations$: Observable<Reservation[]> =
     this.upcoming_reservations.value$;
 
@@ -61,6 +62,34 @@ export class ReserveService implements OnDestroy {
         this.ongoing_reservations.set(reservations.map(parseReservationJSON));
       });
   }
+
+  checkout(reservation: Reservation) {
+    let endpoint = `/api/coworking/reservation/${reservation.id}`;
+    let payload = { id: reservation.id, state: 'CHECKED_OUT' };
+    return this.http.put<ReservationJSON>(endpoint, payload).pipe(
+      map(parseReservationJSON),
+      tap((reservation) => {
+        let rxReservation = this.getRxReservation(reservation.id);
+        rxReservation.set(reservation);
+      })
+    );
+  }
+
+  private getRxReservation(id: number): RxReservation {
+    let reservation = this.reservations_check.get(id);
+    if (reservation === undefined) {
+      let loader = this.http
+        .get<ReservationJSON>(`/api/coworking/reservation/${id}`)
+        .pipe(
+          map(parseReservationJSON),
+          shareReplay({ windowTime: 1000, refCount: true })
+        );
+      reservation = new RxReservation(loader);
+      this.reservations_check.set(id, reservation);
+    }
+    return reservation;
+  }
+
   cancel_rx(reservation: Reservation) {
     this.http
       .put<ReservationJSON>(`/api/coworking/reservation/${reservation.id}`, {

@@ -56,4 +56,7 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
     this.reservationService.cancel_rx(reservation);
     window.alert('Reservation has been canceled');
   }
+  checkout(reservation: Reservation): void {
+    this.reservationService.checkout(reservation).subscribe();
+  }
 }
