@@ -377,6 +377,91 @@ class ReservationService:
 
         return available_seats
 
+    def seat_availability_reserve(
+        self, seats: Sequence[Seat], bounds: TimeRange
+    ) -> Sequence[SeatAvailability]:
+        """Returns a list of all seat availability for specific seats within a given timerange, specifically for the reservable seats.
+
+        Args:
+            bounds (TimeRange): The time range of interest.
+            seats (list[Seat]): The seats to check the availability of.
+
+        Returns:
+            Sequence[SeatAvailability]: All seat availability ordered by nearest and longest available.
+        """
+        # No seats are available in the past
+        now = datetime.now()
+        if bounds.end <= now:
+            return []
+
+        # Ensure the start of the bounds is at least right now
+        if bounds.start < now:
+            bounds.start = now
+
+        # Ensure the bounds is at least as long as a minimum reservation length, with a fudge factor
+        MINUMUM_RESERVATION_EPSILON = timedelta(minutes=1)
+        if (
+            bounds.duration()
+            < self._policy_svc.minimum_reservation_duration()
+            - MINUMUM_RESERVATION_EPSILON
+        ):
+            return []
+
+        # Find operating hours schedule during the requested bounds
+        open_hours = self._operating_hours_svc.schedule(bounds)
+        if len(open_hours) == 0:
+            return []
+
+        # Convert the operating hours during the bounds into an availability list
+        # and constrain the availability list within the bounds.
+        open_availability_list = self._operating_hours_to_bounded_availability_list(
+            open_hours, bounds
+        )
+        if len(open_availability_list.availability) == 0:
+            return []
+
+        # Start from a position where all seats begin with same availability as
+        # open_availability_list. From there, reservations will subtract availability
+        # from the given seat.
+        seat_availability_dict = self._initialize_seat_availability_dict_reserve_only(
+            seats, open_availability_list
+        )
+
+        # Get all active reservations during the availability bounds for the seats.
+        reservation_range = TimeRange(
+            start=open_availability_list.availability[0].start,
+            end=open_availability_list.availability[-1].end,
+        )
+        reservations = self.get_seat_reservations(seats, reservation_range)
+
+        # Subtract all seat reservations from their availability
+        self._remove_reservations_from_availability(
+            seat_availability_dict, reservations
+        )
+
+        # Remove seats with availability below threshold
+        available_seats: list[SeatAvailability] = list(
+            self._prune_seats_below_availability_threshold(
+                list(seat_availability_dict.values()),
+                self._policy_svc.minimum_reservation_duration()
+                - MINUMUM_RESERVATION_EPSILON,
+            )
+        )
+
+        # Sort by nearest available ASC, duration DESC, reservable (False before True), with entropy
+        # The rationale for entropy is when XL is wide open for walkins, within the given seat search
+        # we'd like to mix up the order in which seats are assigned rather than always giving away
+        # the same sequence of seats (and causing more consisten wear and tear to it).
+        available_seats.sort(
+            key=lambda sa: (
+                sa.availability[0].start,
+                -1 * sa.availability[0].duration(),
+                random(),
+            )
+        )
+
+        return available_seats
+
     def draft_reservation(
         self, subject: User, request: ReservationRequest
     ) -> Reservation:
@@ -702,6 +787,18 @@ class ReservationService:
             )
             for seat in seats
             if seat.id is not None
+        }
+
+    def _initialize_seat_availability_dict_reserve_only(
+        self, seats: Sequence[Seat], availability: AvailabilityList
+    ) -> dict[int, SeatAvailability]:
+        return {
+            seat.id: SeatAvailability(
+                availability=availability.model_copy(deep=True).availability,
+                **seat.model_dump(),
+            )
+            for seat in seats
+            if seat.id is not None and seat.reservable is True
         }
 
     def _remove_reservations_from_availability(

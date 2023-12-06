@@ -48,13 +48,16 @@ def draft_reservation(
 def get_available_seats(
     start: datetime,
     end: datetime,
+    flags: bool,
     reservation_svc: ReservationService = Depends(),
     seat_svc: SeatService = Depends(),
 ) -> Sequence[SeatAvailability]:
     """Get the available seats based on the date and time input."""
     availability_request = TimeRange(start=start, end=end)
     seats = seat_svc.list()
-    return reservation_svc.seat_availability(seats, availability_request)
+    if flags:
+        return reservation_svc.seat_availability_reserve([], availability_request)
+    return reservation_svc.seat_availability_reserve(seats, availability_request)
 
 
 @api.get("/upcoming", tags=["Reserve"])
