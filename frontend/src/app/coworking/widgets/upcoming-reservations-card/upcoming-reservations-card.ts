@@ -17,13 +17,23 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
   reservations$: Observable<Reservation[]>;
 
   columnsToDisplay = ['name', 'seat', 'date', 'start', 'end', 'actions'];
+  columnsToDisplayOngoing = [
+    'name',
+    'seat',
+    'date',
+    'start',
+    'end',
+    'status',
+    'actions'
+  ];
 
   private refreshSubscription!: Subscription;
+  reservations_ongoing$: Observable<Reservation[]>;
   constructor(public reservationService: ReserveService) {
-    // pid = Profile.pid; take in the pid somehow
-    //this.reservations$ = reservationService.get(0); //replace 0 with actual pid number
     {
       this.reservations$ = this.reservationService.reservations$;
+      this.reservations_ongoing$ =
+        this.reservationService.reservations_ongoing$;
     }
   }
 
@@ -31,7 +41,14 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
     this.refreshSubscription = timer(0, 5000)
       .pipe(tap((_) => this.reservationService.fetchUpcomingReservations()))
       .subscribe();
+    this.refreshSubscription = timer(0, 5000)
+      .pipe(tap((_) => this.reservationService.fetchOngoingReservations()))
+      .subscribe();
   }
+  checkinDeadline(reservationStart: Date): Date {
+    return new Date(reservationStart.getTime() + 10 * 60 * 1000);
+  }
+
   ngOnDestroy(): void {
     this.refreshSubscription.unsubscribe();
   }

@@ -29,9 +29,14 @@ export class ReserveService implements OnDestroy {
 
   private profile: Profile | undefined;
   private profileSubscription!: Subscription;
-  private current_reservations: RxReservations = new RxReservations();
+  private upcoming_reservations: RxReservations = new RxReservations();
+  private ongoing_reservations: RxReservations = new RxReservations();
+
   public reservations$: Observable<Reservation[]> =
-    this.current_reservations.value$;
+    this.upcoming_reservations.value$;
+
+  public reservations_ongoing$: Observable<Reservation[]> =
+    this.ongoing_reservations.value$;
 
   public constructor(
     protected http: HttpClient,
@@ -45,7 +50,15 @@ export class ReserveService implements OnDestroy {
     this.http
       .get<ReservationJSON[]>('/api/reserve/upcoming')
       .subscribe((reservations) => {
-        this.current_reservations.set(reservations.map(parseReservationJSON));
+        this.upcoming_reservations.set(reservations.map(parseReservationJSON));
+      });
+  }
+
+  fetchOngoingReservations(): void {
+    this.http
+      .get<ReservationJSON[]>('/api/reserve/ongoing')
+      .subscribe((reservations) => {
+        this.ongoing_reservations.set(reservations.map(parseReservationJSON));
       });
   }
   cancel_rx(reservation: Reservation) {
@@ -56,7 +69,23 @@ export class ReserveService implements OnDestroy {
       })
       .subscribe({
         next: (_) => {
-          this.current_reservations.remove(reservation);
+          this.upcoming_reservations.remove(reservation);
+        },
+        error: (err) => {
+          alert(err);
+        }
+      });
+  }
+
+  cancel_rx_ongoing(reservation: Reservation) {
+    this.http
+      .put<ReservationJSON>(`/api/coworking/reservation/${reservation.id}`, {
+        id: reservation.id,
+        state: 'CANCELLED'
+      })
+      .subscribe({
+        next: (_) => {
+          this.ongoing_reservations.remove(reservation);
         },
         error: (err) => {
           alert(err);

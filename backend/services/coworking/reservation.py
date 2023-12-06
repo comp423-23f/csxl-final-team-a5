@@ -145,10 +145,65 @@ class ReservationService:
         #
         now = datetime.now()
         time_range = TimeRange(
-            start=now + timedelta(hours=1),
+            start=now,
             end=now + self._policy_svc.reservation_window(focus),
         )
-        return self._get_active_reservations_for_user(focus, time_range)
+        return self._get_internal_upcoming_reservations_for_user(focus, time_range)
+
+    def get_ongoing_reservations_for_user(
+        self, subject: User, focus: User
+    ) -> Sequence[Reservation]:
+        """Find upcoming reservations for a given user.
+        The subject must either also be the focus or have permission to view reservations of
+        the given user. The permission needed is action "coworking.reservation.read" and
+        resource "coworking.reservation.users/:focus_id"
+        Args:
+            subject (User): The user making the request
+            focus (User): The user whose reservations are being retrieved
+        Returns:
+            Sequence[Reservation]: Upcoming reservations for the user.
+        Raises:
+            UserPermissionException"""
+        if subject != focus:
+            self._permission_svc.enforce(
+                subject,
+                "coworking.reservation.read",
+                f"user/{focus.id}",
+            )
+        #
+        now = datetime.now()
+        time_range = TimeRange(
+            start=now,
+            end=now + self._policy_svc.reservation_window(focus),
+        )
+        return self._get_current_internal_reservations_for_user(focus, time_range)
+
+    def _get_current_internal_reservations_for_user(
+        self, focus: UserIdentity, time_range: TimeRange
+    ) -> Sequence[Reservation]:
+        reservations = (
+            self._session.query(ReservationEntity)
+            .join(ReservationEntity.users)
+            .filter(
+                ReservationEntity.end > time_range.start,
+                ReservationEntity.start < time_range.start,
+                ReservationEntity.state.not_in(
+                    [ReservationState.CANCELLED, ReservationState.CHECKED_OUT]
+                ),
+                UserEntity.id == focus.id,
+            )
+            .options(
+                joinedload(ReservationEntity.users), joinedload(ReservationEntity.seats)
+            )
+            .order_by(ReservationEntity.start)
+            .all()
+        )
+
+        reservations = self._state_transition_reservation_entities_by_time(
+            datetime.now(), reservations
+        )
+
+        return [reservation.to_model() for reservation in reservations]
 
     def _get_active_reservations_for_user(
         self, focus: UserIdentity, time_range: TimeRange
@@ -159,6 +214,35 @@ class ReservationService:
             .filter(
                 ReservationEntity.start < time_range.end,
                 ReservationEntity.end > time_range.start,
+                ReservationEntity.start > time_range.start,
+                ReservationEntity.state.not_in(
+                    [ReservationState.CANCELLED, ReservationState.CHECKED_OUT]
+                ),
+                UserEntity.id == focus.id,
+            )
+            .options(
+                joinedload(ReservationEntity.users), joinedload(ReservationEntity.seats)
+            )
+            .order_by(ReservationEntity.start)
+            .all()
+        )
+
+        reservations = self._state_transition_reservation_entities_by_time(
+            datetime.now(), reservations
+        )
+
+        return [reservation.to_model() for reservation in reservations]
+
+    def _get_internal_upcoming_reservations_for_user(
+        self, focus: UserIdentity, time_range: TimeRange
+    ) -> Sequence[Reservation]:
+        reservations = (
+            self._session.query(ReservationEntity)
+            .join(ReservationEntity.users)
+            .filter(
+                ReservationEntity.start < time_range.end,
+                ReservationEntity.end > time_range.start,
+                ReservationEntity.start > time_range.start,
                 ReservationEntity.state.not_in(
                     [ReservationState.CANCELLED, ReservationState.CHECKED_OUT]
                 ),
