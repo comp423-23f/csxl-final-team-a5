@@ -1,17 +1,13 @@
 <div class="reserve-grid">
-  <div class="reserve-card">
-    <reserve-card (searchClicked)="searchAvailableSeats($event)"></reserve-card>
-  </div>
-  <div class="coworking-reservations-grid">
-    <ng-container *ngIf="status$ | async as status">
-      <div *ngIf="searching" class="dropin-card-container">
-        <reserve-availability-card
-          [seat_availability]="seatAvailability"
-          (seatsSelected)="reserve($event)" />
-      </div>
-    </ng-container>
-    <div class="upcomingreservations-card-container">
-      <upcoming-reservations-card> </upcoming-reservations-card>
+  <reserve-card (searchClicked)="searchAvailableSeats($event)"></reserve-card>
+  <ng-container *ngIf="status$ | async as status">
+    <div *ngIf="searching" class="reserve-card-container">
+      <reserve-availability-card
+        [seat_availability]="seatAvailability"
+        (seatsSelected)="reserve($event)" />
     </div>
+  </ng-container>
+  <div class="upcomingreservations-card-container">
+    <upcoming-reservations-card> </upcoming-reservations-card>
   </div>
 </div>
