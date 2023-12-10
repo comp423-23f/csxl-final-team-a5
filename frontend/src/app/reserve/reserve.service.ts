@@ -19,9 +19,7 @@ import { RxCoworkingStatus } from '../coworking/rx-coworking-status';
 import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
 import { RxReservation } from '../coworking/reservation/rx-reservation';
 
-import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -43,7 +41,6 @@ export class ReserveService implements OnDestroy {
 
   public reservations_ongoing$: Observable<Reservation[]> =
     this.ongoing_reservations.value$;
-
 
   public constructor(
     protected http: HttpClient,
@@ -97,7 +94,6 @@ export class ReserveService implements OnDestroy {
     return reservation;
   }
 
-
   cancel_rx(reservation: Reservation) {
     this.http
       .put<ReservationJSON>(`/api/coworking/reservation/${reservation.id}`, {
@@ -123,7 +119,6 @@ export class ReserveService implements OnDestroy {
       .subscribe({
         next: (_) => {
           this.ongoing_reservations.remove(reservation);
-
         },
         error: (err) => {
           alert(err);
@@ -145,7 +140,6 @@ export class ReserveService implements OnDestroy {
     if (this.profile === undefined) {
       throw new Error('Only allowed for logged in users.');
     }
-
     let start = new Date(selectedTime.getTime() - 5 * ONE_HOUR);
     let end = new Date(start.getTime() + 2 * ONE_HOUR);
     let start_str = start.toISOString();
@@ -213,6 +207,39 @@ export class ReserveService implements OnDestroy {
           start: start_str,
           end: end_str,
           flags: reservation_at_time_flag || too_many_reservations_flag
+        }
+      })
+      .pipe(
+        map((seatAvailability) =>
+          seatAvailability.map(parseSeatAvailabilityJSON)
+        )
+      );
+  }
+
+  searchDayAvailability(selectedTime: Date) {
+    if (this.profile === undefined) {
+      throw new Error('Only allowed for logged in users.');
+    }
+    let start = new Date(selectedTime.getTime());
+    start.setUTCHours(0, 0, 0, 0);
+    let start_str = start.toISOString();
+    start_str = start_str.slice(0, -1);
+    start_str += '0';
+
+    let end = start;
+    end.setUTCHours(23, 59, 59, 0);
+    let end_str = end.toISOString();
+    end_str = end_str.slice(0, -1);
+    end_str += '0';
+    console.log(start_str);
+    console.log(end_str);
+
+    return this.http
+      .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {
+        params: {
+          start: start_str,
+          end: end_str,
+          flags: false
         }
       })
       .pipe(

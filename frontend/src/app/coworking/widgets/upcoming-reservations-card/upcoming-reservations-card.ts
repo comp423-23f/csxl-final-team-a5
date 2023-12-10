@@ -5,9 +5,8 @@ import { ReservationService } from '../../reservation/reservation.service';
 import { Profile } from 'src/app/models.module';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { HttpClient } from '@angular/common/http';
-import { ReserveService } from 'src/app/reserve/reserve.service'
+import { ReserveService } from 'src/app/reserve/reserve.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 
 @Component({
   selector: 'upcoming-reservations-card',
@@ -30,6 +29,7 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
   ];
 
   private refreshSubscription!: Subscription;
+  reservations_ongoing$: Observable<Reservation[]>;
   constructor(
     public reservationService: ReserveService,
     protected snackBar: MatSnackBar
