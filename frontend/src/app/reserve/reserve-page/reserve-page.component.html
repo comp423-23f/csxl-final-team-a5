@@ -1,10 +1,13 @@
 <div class="reserve-grid">
   <div class="reserve-card">
-    <reserve-card (searchClicked)="searchAvailableSeats($event)"></reserve-card>
+    <reserve-card
+      (searchClicked)="searchAvailableSeats($event)"
+      (searchClicked)="searchDayAvailableSeats($event)"></reserve-card>
   </div>
   <div class="coworking-reservations-grid">
     <ng-container *ngIf="status$ | async as status">
       <div *ngIf="searching" class="dropin-card-container">
+        <availability-table [day_availability]="daySeatAvailability" />
         <reserve-availability-card
           [seat_availability]="seatAvailability"
           (seatsSelected)="reserve($event)" />

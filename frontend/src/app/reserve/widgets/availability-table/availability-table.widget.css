@@ -1,0 +1,42 @@
+.dropin-header {
+  display: flex;
+  margin-bottom: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.availability-table {
+    width: 100%;
+    /* Additional styling */
+}
+
+.availability-table .seat-column {
+    width: 28%; /* Adjust as needed */
+}
+
+.availability-table .time-column {
+    width: 9%; /* Adjust so that all time columns together take up 80% */
+}
+
+.availability-table td, .availability-table th {
+    text-align: center;
+}
+
+button.available {
+    background-color: #90EE90; /* Light green to indicate availability */
+    width: 100%;
+    height: 100%;
+    padding: 10px 0; /* Adjust padding as needed */
+}
+
+button.unavailable {
+    background-color: #F44336; /* Light green to indicate availability */
+    width: 100%;
+    height: 100%;
+    padding: 10px 0; /* Adjust padding as needed */
+}
+
+.mat-mdc-card {
+    max-width: 640px;
+    margin: 0;
+}

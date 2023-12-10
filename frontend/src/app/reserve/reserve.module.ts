@@ -21,6 +21,7 @@ import { CoworkingReservationCard } from '../coworking/widgets/coworking-reserva
 import { CoworkingModule } from '../coworking/coworking.module';
 import { ReserveAvailibilityCard } from './widgets/reservation-card/reserve-availability-card/reserve-availability-card.widget';
 import { ConfirmReservationCard } from './widgets/reservation-card/confirm-reservation-card/confirm-reservation-card.widget';
+import { AvailibilityTable } from './widgets/availability-table/availability-table.widget';
 
 @NgModule({
   declarations: [ReservePageComponent, ConfirmReservationCard],
@@ -40,7 +41,8 @@ import { ConfirmReservationCard } from './widgets/reservation-card/confirm-reser
     FormsModule,
     ReactiveFormsModule,
     ReservationCard,
-    ReserveAvailibilityCard
+    ReserveAvailibilityCard,
+    AvailibilityTable
   ]
 })
 export class ReserveModule {}

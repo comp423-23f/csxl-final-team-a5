@@ -51,13 +51,44 @@ export class ReserveService implements OnDestroy {
     if (this.profile === undefined) {
       throw new Error('Only allowed for logged in users.');
     }
-
     let start = new Date(selectedTime.getTime() - 5 * ONE_HOUR);
     let end = new Date(start.getTime() + 2 * ONE_HOUR);
     let start_str = start.toISOString();
     start_str = start_str.slice(0, -1);
     start_str += '0';
 
+    let end_str = end.toISOString();
+    end_str = end_str.slice(0, -1);
+    end_str += '0';
+    console.log(start_str);
+    console.log(end_str);
+
+    return this.http
+      .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {
+        params: {
+          start: start_str,
+          end: end_str
+        }
+      })
+      .pipe(
+        map((seatAvailability) =>
+          seatAvailability.map(parseSeatAvailabilityJSON)
+        )
+      );
+  }
+
+  searchDayAvailability(selectedTime: Date) {
+    if (this.profile === undefined) {
+      throw new Error('Only allowed for logged in users.');
+    }
+    let start = new Date(selectedTime.getTime());
+    start.setUTCHours(0, 0, 0, 0);
+    let start_str = start.toISOString();
+    start_str = start_str.slice(0, -1);
+    start_str += '0';
+
+    let end = start;
+    end.setUTCHours(23, 59, 59, 0);
     let end_str = end.toISOString();
     end_str = end_str.slice(0, -1);
     end_str += '0';
