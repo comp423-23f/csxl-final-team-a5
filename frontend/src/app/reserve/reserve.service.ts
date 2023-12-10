@@ -18,7 +18,6 @@ import { Profile } from '../models.module';
 import { RxCoworkingStatus } from '../coworking/rx-coworking-status';
 import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
 import { RxReservation } from '../coworking/reservation/rx-reservation';
-
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 const ONE_HOUR = 60 * 60 * 1000;
