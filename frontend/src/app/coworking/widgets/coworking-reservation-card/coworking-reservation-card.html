@@ -84,7 +84,18 @@
       </ng-container>
 
       <ng-container *ngSwitchCase="'CONFIRMED'">
-        <button mat-stroked-button type="submit" (click)="cancel()">
+        <button
+          *ngIf="isNotCurrentRoute('/coworking')"
+          mat-stroked-button
+          type="submit"
+          (click)="router.navigateByUrl('/coworking')">
+          Back
+        </button>
+        <button
+          mat-stroked-button
+          type="submit"
+          (click)="cancel()"
+          style="margin-left: 10px">
           Cancel
         </button>
       </ng-container>

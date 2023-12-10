@@ -6,7 +6,8 @@
   <mat-card-content>
     <p>
       The following seats are available at your selected time. Reserve here and
-      check-in within 10 minutes after your reservation time.
+      check-in within 10 minutes after your reservation time. If no seats are
+      available, please select a different time.
     </p>
     <!-- TODO: Refactor these list items to widgets? -->
     <mat-action-list>
@@ -24,7 +25,9 @@
           <ng-container *ngIf="category.reservable_soon; else not_reservable">
             <mat-list-item (click)="reserve(category)">
               <h3 matListItemTitle>{{ category.title }}</h3>
-              <div matListItemIcon class="upcoming">1</div>
+              <div matListItemIcon class="upcoming">
+                {{ category.seats_available_soon.length }}
+              </div>
               <p matListItemLine>{{ category.availabilityString() }}</p>
               <h3 matListItemMeta>&rsaquo;</h3>
             </mat-list-item>
