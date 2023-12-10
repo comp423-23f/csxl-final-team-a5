@@ -31,7 +31,13 @@ from .. import operating_hours_data
 from .. import seat_data
 from . import reservation_data
 
-__authors__ = ["Kris Jordan"]
+__authors__ = [
+    "Kris Jordan",
+    "Bernie Chen",
+    "Kene Ochuba",
+    "Lucas Siegel",
+    "Sunny Wang",
+]
 __copyright__ = "Copyright 2023"
 __license__ = "MIT"
 
