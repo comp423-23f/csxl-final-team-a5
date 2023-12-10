@@ -43,7 +43,7 @@ def time() -> dict[str, datetime]:
 def time_data() -> dict[str, datetime]:
     """Separated out as a standalone function from its fixture such that it can be called during reset database script."""
     now = datetime.now()
-    now = now.replace(hour=12, minute=0, second=0)
+    now = now.replace(hour=17, minute=0, second=0)
     return {
         # Times
         NOW: now,
