@@ -44,6 +44,7 @@ export class ReservationCard {
     { value: '2:00pm' },
     { value: '3:00pm' },
     { value: '4:00pm' }
+
     //ends at 4pm because we are only supporting 2-hr reservations and xl closes at 6
   ];
   minDate: Date;
