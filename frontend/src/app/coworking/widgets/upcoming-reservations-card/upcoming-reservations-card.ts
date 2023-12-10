@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class UpcomingReservationsCard implements OnInit, OnDestroy {
   //public reservations$: Observable<Reservation>;
   reservations$: Observable<Reservation[]>;
+  reservations_ongoing$: Observable<Reservation[]>;
 
   columnsToDisplay = ['name', 'seat', 'date', 'start', 'end', 'actions'];
   columnsToDisplayOngoing = [
@@ -29,7 +30,7 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
   ];
 
   private refreshSubscription!: Subscription;
-  reservations_ongoing$: Observable<Reservation[]>;
+
   constructor(
     public reservationService: ReserveService,
     protected snackBar: MatSnackBar
