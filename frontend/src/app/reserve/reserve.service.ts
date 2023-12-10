@@ -156,7 +156,7 @@ export class ReserveService implements OnDestroy {
     }
     if (no_reservables) {
       this.snackBar.open(
-        'These seats are currently unavailable for reservations!',
+        'There are no seats available for reservations!',
         'Close',
         {
           duration: 3000

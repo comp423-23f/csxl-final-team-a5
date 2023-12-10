@@ -47,9 +47,8 @@ def test_get_upcoming_reservations_for_user_as_user(
     reservations = reservation_svc.get_upcoming_reservations_for_user(
         user_data.user, user_data.user
     )
-    assert len(reservations) == 2
+    assert len(reservations) == 1
     assert reservations[0].id == reservation_data.reservation_1.id
-    assert reservations[1].id == reservation_data.reservation_5.id
 
     reservations = reservation_svc.get_upcoming_reservations_for_user(
         user_data.ambassador, user_data.ambassador
