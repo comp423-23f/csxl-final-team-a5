@@ -1,38 +1,11 @@
 /** 
 * reserve-page.component.css 
 */
-
-.reserve-grid {
-    display: grid;
-    padding: 24px;
-    row-gap: 15px;
-    column-gap: 15px;
+.mat-mdc-card {
+    margin: 1em;
+    max-width: 640px;
 }
 
-.other-reserve-card-container {
-    grid-column-start: 1;
-}
-
-.other-upcomingreservations-card-container {
-    grid-column-start: 1;
-}
-
-/** Make cards display in one column, with the event card appearing last */
-@media only screen and (max-device-width: 730px) {
-    .reserve-grid {
-        display: grid;
-        padding: 24px;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
-        row-gap: 15px;
-        column-gap: 24px;
-    }
-
-    .reserve-card-container {
-        order: 1;
-    }
-
-    .upcomingreservations-card-container {
-        order: 2;
-    }
+.mat-card-content {
+    margin-top: 8px;
 }

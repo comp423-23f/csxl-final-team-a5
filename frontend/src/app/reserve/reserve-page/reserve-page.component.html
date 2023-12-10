@@ -1,13 +1,13 @@
-<div class="reserve-grid">
+<mat-card appearance="outlined">
   <reserve-card (searchClicked)="searchAvailableSeats($event)"></reserve-card>
   <ng-container *ngIf="status$ | async as status">
-    <div *ngIf="searching" class="reserve-card-container">
+    <div *ngIf="searching">
       <reserve-availability-card
         [seat_availability]="seatAvailability"
         (seatsSelected)="reserve($event)" />
     </div>
   </ng-container>
-  <div class="upcomingreservations-card-container">
-    <upcoming-reservations-card> </upcoming-reservations-card>
-  </div>
-</div>
+</mat-card>
+<mat-card appearance="outlined">
+  <upcoming-reservations-card> </upcoming-reservations-card>
+</mat-card>
