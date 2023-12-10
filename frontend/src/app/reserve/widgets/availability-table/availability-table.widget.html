@@ -1,0 +1,30 @@
+<mat-card appearance="outlined">
+  <mat-card-header class="dropin-header">
+    <mat-card-title>Current Seat Availability (SN156)</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <table class="availability-table">
+      <thead>
+        <tr>
+          <th class="table-header seat-column">Seat</th>
+          <th class="table-header time-column">10am</th>
+          <th class="table-header time-column">11am</th>
+          <th class="table-header time-column">12pm</th>
+          <th class="table-header time-column">1pm</th>
+          <th class="table-header time-column">2pm</th>
+          <th class="table-header time-column">3pm</th>
+          <th class="table-header time-column">4pm</th>
+          <th class="table-header time-column">5pm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let seat of seat_types">
+          <td>{{ seat.title }}</td>
+          <td *ngFor="let available of seat.available_hours">
+            <button [class]="available ? 'available' : 'unavailable'"></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>

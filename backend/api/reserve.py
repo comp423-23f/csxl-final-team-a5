@@ -48,13 +48,16 @@ def draft_reservation(
 def get_available_seats(
     start: datetime,
     end: datetime,
+    flags: bool,
     reservation_svc: ReservationService = Depends(),
     seat_svc: SeatService = Depends(),
 ) -> Sequence[SeatAvailability]:
     """Get the available seats based on the date and time input."""
     availability_request = TimeRange(start=start, end=end)
     seats = seat_svc.list()
-    return reservation_svc.seat_availability(seats, availability_request)
+    if flags:
+        return reservation_svc.seat_availability_reserve([], availability_request)
+    return reservation_svc.seat_availability_reserve(seats, availability_request)
 
 
 @api.get("/upcoming", tags=["Reserve"])
@@ -62,5 +65,14 @@ def get_reservations(
     subject: User = Depends(registered_user),
     reservation_svc: ReservationService = Depends(),
 ) -> Sequence[Reservation]:
-    """Get the Users current reservations."""
+    """Get the Users upcoming reservations."""
     return reservation_svc.get_upcoming_reservations_for_user(subject, subject)
+
+
+@api.get("/ongoing", tags=["Reserve"])
+def get_ongoing_reservations(
+    subject: User = Depends(registered_user),
+    reservation_svc: ReservationService = Depends(),
+) -> Sequence[Reservation]:
+    """Get the Users current reservations."""
+    return reservation_svc.get_ongoing_reservations_for_user(subject, subject)

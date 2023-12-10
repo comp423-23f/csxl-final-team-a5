@@ -39,6 +39,10 @@ export class CoworkingReservationCard implements OnInit {
     this.reservationService.checkout(this.reservation).subscribe();
   }
 
+  isNotCurrentRoute(route: string): boolean {
+    return this.router.url !== route;
+  }
+
   private initDraftConfirmationDeadline(): Observable<string> {
     const fiveMinutes =
       5 /* minutes */ * 60 /* seconds */ * 1000; /* milliseconds */

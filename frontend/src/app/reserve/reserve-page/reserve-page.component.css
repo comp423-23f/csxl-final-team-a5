@@ -1,36 +1,11 @@
 /** 
 * reserve-page.component.css 
 */
-
-
-.reserve-top-grid {
-    display: grid;
-    padding-top: 24px;
-    padding-left: 24px;
-    padding-right: 24px;
-    grid-template-columns: 4fr 1fr;
-    /* grid-template-rows: 0fr 2fr; <-- UNCOMMENT */
-    row-gap: 15px;
-    column-gap: 15px;
+.mat-mdc-card {
+    margin: 1em;
+    max-width: 640px;
 }
 
-.reserve-grid {
-    display: grid;
-    padding: 24px;
-    /* grid-template-columns: 1fr 1fr; */
-    /* grid-template-rows: 0fr 2fr; <-- UNCOMMENT */
-    row-gap: 15px;
-    column-gap: 15px;
-}
-
-.reserve-top-card-container {
-    grid-column: span 1;
-}
-
-.coworking-reservations-grid {
-    display: grid;
-    /* grid-template-columns: 1fr 1fr; */
-    /* grid-template-rows: 0fr 2fr; <-- UNCOMMENT */
-    row-gap: 15px;
-    column-gap: 15px;
+.mat-card-content {
+    margin-top: 8px;
 }

@@ -34,6 +34,7 @@ export class ReservePageComponent implements OnInit, OnDestroy {
 
   public status$: Observable<CoworkingStatus>;
   public seatAvailability: SeatAvailability[];
+  public daySeatAvailability: SeatAvailability[];
 
   public openOperatingHours$: Observable<OperatingHours | undefined>;
   public isOpen$: Observable<boolean>;
@@ -63,6 +64,7 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     this.activeReservation$ = this.initActiveReservation();
     this.searching = false;
     this.seatAvailability = [];
+    this.daySeatAvailability = [];
   }
 
   reserve(seatSelection: SeatAvailability[]) {
@@ -79,6 +81,16 @@ export class ReservePageComponent implements OnInit, OnDestroy {
     this.reserveService.searchAvailability(selectedTime).subscribe({
       next: (availability) => {
         this.seatAvailability = availability;
+      }
+    });
+  }
+
+  searchDayAvailableSeats(selectedTime: Date) {
+    this.searching = true;
+    console.log('Retrieving', this.searching);
+    this.reserveService.searchDayAvailability(selectedTime).subscribe({
+      next: (availability) => {
+        this.daySeatAvailability = availability;
       }
     });
   }
