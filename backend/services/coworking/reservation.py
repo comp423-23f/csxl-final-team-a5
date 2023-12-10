@@ -145,7 +145,7 @@ class ReservationService:
         #
         now = datetime.now()
         time_range = TimeRange(
-            start=now + timedelta(hours=1),
+            start=now,
             end=now + self._policy_svc.reservation_window(focus),
         )
         return self._get_internal_upcoming_reservations_for_user(focus, time_range)
@@ -181,15 +181,12 @@ class ReservationService:
     def _get_current_internal_reservations_for_user(
         self, focus: UserIdentity, time_range: TimeRange
     ) -> Sequence[Reservation]:
-
         reservations = (
             self._session.query(ReservationEntity)
             .join(ReservationEntity.users)
             .filter(
-
                 ReservationEntity.end > time_range.start,
                 ReservationEntity.start < time_range.start,
-
                 ReservationEntity.state.not_in(
                     [
                         ReservationState.CANCELLED,

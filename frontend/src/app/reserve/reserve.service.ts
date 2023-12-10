@@ -19,9 +19,7 @@ import { RxCoworkingStatus } from '../coworking/rx-coworking-status';
 import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
 import { RxReservation } from '../coworking/reservation/rx-reservation';
 
-import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -43,7 +41,6 @@ export class ReserveService implements OnDestroy {
 
   public reservations_ongoing$: Observable<Reservation[]> =
     this.ongoing_reservations.value$;
-
 
   public constructor(
     protected http: HttpClient,
@@ -97,7 +94,6 @@ export class ReserveService implements OnDestroy {
     return reservation;
   }
 
-
   cancel_rx(reservation: Reservation) {
     this.http
       .put<ReservationJSON>(`/api/coworking/reservation/${reservation.id}`, {
@@ -123,7 +119,6 @@ export class ReserveService implements OnDestroy {
       .subscribe({
         next: (_) => {
           this.ongoing_reservations.remove(reservation);
-
         },
         error: (err) => {
           alert(err);
@@ -243,7 +238,8 @@ export class ReserveService implements OnDestroy {
       .get<SeatAvailabilityJSON[]>('/api/reserve/availability', {
         params: {
           start: start_str,
-          end: end_str
+          end: end_str,
+          flags: false
         }
       })
       .pipe(
