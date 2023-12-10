@@ -5,7 +5,8 @@ import { ReservationService } from '../../reservation/reservation.service';
 import { Profile } from 'src/app/models.module';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { HttpClient } from '@angular/common/http';
-import { ReserveService } from 'src/app/reserve/reserve.service';
+import { ReserveService } from 'src/app/reserve/reserve.service'
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'upcoming-reservations-card',
@@ -19,7 +20,11 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
   columnsToDisplay = ['name', 'seat', 'date', 'start', 'end', 'actions'];
 
   private refreshSubscription!: Subscription;
-  constructor(public reservationService: ReserveService) {
+
+  constructor(
+    public reservationService: ReservationService,
+    protected snackBar: MatSnackBar
+  ) {
     // pid = Profile.pid; take in the pid somehow
     //this.reservations$ = reservationService.get(0); //replace 0 with actual pid number
     {
@@ -37,6 +42,8 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
   }
   cancel(reservation: Reservation): void {
     this.reservationService.cancel_rx(reservation);
-    window.alert('Reservation has been canceled');
+    this.snackBar.open('Your reservation has been canceled!', 'Close', {
+      duration: 3000
+    });
   }
 }
