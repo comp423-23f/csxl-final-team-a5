@@ -1,11 +1,14 @@
 # Retrieve Future Availability
 
-> Written by [Bernie Chen](https://github.com/bcscc), [Kene Ochuba](https://github.com/Keneo1), [Lucas Siegel](https://github.com/lsiegel4), and [Sunny Wang](https://github.com/sunnyywang) for the final project of COMP 423: Foundations of Software Engineering.<br>
-> _Last Updated: 12/4/2023_
+> Written by [Bernie Chen](https://github.com/bcscc), [Kene Ochuba](https://github.com/Keneo1), [Lucas Siegel](https://github.com/lsiegel4), and [Sunny Wang](https://github.com/sunnyywang) for the final project of COMP 423: Foundations of Software Engineering.<br> > _Last Updated: 12/4/2023_
 
 ## New Route
 
 We added a new **/api/reserve/availability** route in the backend API that calls a new **get_available_seats** method in the backend service in reserve.py, which takes in a specified date to retrieve a list of available seats. This list is returned to the original **searchAvailableSeats** function that is called in the frontend reserve service, which is responsible for populating the selectable seat reservation options.
+
+We added a new **/api/reserve/upcoming** route in the backend API that calls a new **get_upcoming_reservations_for_user** method in the backend service in reserve.py, which takes in a user and the registration service. It gets the upcoming reservations for that user.
+
+We also added a new **/api/reserve/ongoing** route in the backend API that calls a new **get_ongoing_reservations_for_user** method in the backend service in reserve.py, which takes in a user and the registration service. It gets the current ongoing reservations for that user.
 
 ## Database/Entity-level Representation
 
