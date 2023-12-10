@@ -5,6 +5,7 @@ import { ReservationService } from '../../reservation/reservation.service';
 import { Profile } from 'src/app/models.module';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { HttpClient } from '@angular/common/http';
+import { ReserveService } from 'src/app/reserve/reserve.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -19,6 +20,7 @@ export class UpcomingReservationsCard implements OnInit, OnDestroy {
   columnsToDisplay = ['name', 'seat', 'date', 'start', 'end', 'actions'];
 
   private refreshSubscription!: Subscription;
+
   constructor(
     public reservationService: ReservationService,
     protected snackBar: MatSnackBar
