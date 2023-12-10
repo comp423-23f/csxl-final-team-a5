@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { Observable, Subscription, map, tap } from 'rxjs';
+import { Observable, Subscription, map, shareReplay, tap } from 'rxjs';
 import {
   CoworkingStatus,
   CoworkingStatusJSON,
@@ -16,6 +16,8 @@ import {
 import { ProfileService } from '../profile/profile.service';
 import { Profile } from '../models.module';
 import { RxCoworkingStatus } from '../coworking/rx-coworking-status';
+import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
+import { RxReservation } from '../coworking/reservation/rx-reservation';
 
 import { RxReservations } from '../coworking/ambassador-home/rx-reservations';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -32,9 +34,16 @@ export class ReserveService implements OnDestroy {
 
   private profile: Profile | undefined;
   private profileSubscription!: Subscription;
-  private current_reservations: RxReservations = new RxReservations();
+
+  private upcoming_reservations: RxReservations = new RxReservations();
+  private ongoing_reservations: RxReservations = new RxReservations();
+  private reservations_check: Map<number, RxReservation> = new Map();
   public reservations$: Observable<Reservation[]> =
-    this.current_reservations.value$;
+    this.upcoming_reservations.value$;
+
+  public reservations_ongoing$: Observable<Reservation[]> =
+    this.ongoing_reservations.value$;
+
 
   public constructor(
     protected http: HttpClient,
@@ -49,9 +58,46 @@ export class ReserveService implements OnDestroy {
     this.http
       .get<ReservationJSON[]>('/api/reserve/upcoming')
       .subscribe((reservations) => {
-        this.current_reservations.set(reservations.map(parseReservationJSON));
+        this.upcoming_reservations.set(reservations.map(parseReservationJSON));
       });
   }
+
+  fetchOngoingReservations(): void {
+    this.http
+      .get<ReservationJSON[]>('/api/reserve/ongoing')
+      .subscribe((reservations) => {
+        this.ongoing_reservations.set(reservations.map(parseReservationJSON));
+      });
+  }
+
+  checkout(reservation: Reservation) {
+    let endpoint = `/api/coworking/reservation/${reservation.id}`;
+    let payload = { id: reservation.id, state: 'CHECKED_OUT' };
+    return this.http.put<ReservationJSON>(endpoint, payload).pipe(
+      map(parseReservationJSON),
+      tap((reservation) => {
+        let rxReservation = this.getRxReservation(reservation.id);
+        rxReservation.set(reservation);
+      })
+    );
+  }
+
+  private getRxReservation(id: number): RxReservation {
+    let reservation = this.reservations_check.get(id);
+    if (reservation === undefined) {
+      let loader = this.http
+        .get<ReservationJSON>(`/api/coworking/reservation/${id}`)
+        .pipe(
+          map(parseReservationJSON),
+          shareReplay({ windowTime: 1000, refCount: true })
+        );
+      reservation = new RxReservation(loader);
+      this.reservations_check.set(id, reservation);
+    }
+    return reservation;
+  }
+
+
   cancel_rx(reservation: Reservation) {
     this.http
       .put<ReservationJSON>(`/api/coworking/reservation/${reservation.id}`, {
@@ -60,7 +106,24 @@ export class ReserveService implements OnDestroy {
       })
       .subscribe({
         next: (_) => {
-          this.current_reservations.remove(reservation);
+          this.upcoming_reservations.remove(reservation);
+        },
+        error: (err) => {
+          alert(err);
+        }
+      });
+  }
+
+  cancel_rx_ongoing(reservation: Reservation) {
+    this.http
+      .put<ReservationJSON>(`/api/coworking/reservation/${reservation.id}`, {
+        id: reservation.id,
+        state: 'CANCELLED'
+      })
+      .subscribe({
+        next: (_) => {
+          this.ongoing_reservations.remove(reservation);
+
         },
         error: (err) => {
           alert(err);

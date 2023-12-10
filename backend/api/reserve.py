@@ -65,5 +65,14 @@ def get_reservations(
     subject: User = Depends(registered_user),
     reservation_svc: ReservationService = Depends(),
 ) -> Sequence[Reservation]:
-    """Get the Users current reservations."""
+    """Get the Users upcoming reservations."""
     return reservation_svc.get_upcoming_reservations_for_user(subject, subject)
+
+
+@api.get("/ongoing", tags=["Reserve"])
+def get_ongoing_reservations(
+    subject: User = Depends(registered_user),
+    reservation_svc: ReservationService = Depends(),
+) -> Sequence[Reservation]:
+    """Get the Users current reservations."""
+    return reservation_svc.get_ongoing_reservations_for_user(subject, subject)
