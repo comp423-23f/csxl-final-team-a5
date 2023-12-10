@@ -1,7 +1,7 @@
 # Retrieve Future Availability
 
-> Written by Bernie Chen, Kene Ochuba, Lucas Siegel, and Sunny Wang for the final project of COMP 423: Foundations of Software Engineering.<br>
-> Last Updated: 11/19/2023
+> Written by [Bernie Chen](https://github.com/bcscc), [Kene Ochuba](https://github.com/Keneo1), [Lucas Siegel](https://github.com/lsiegel4), and [Sunny Wang](https://github.com/sunnyywang) for the final project of COMP 423: Foundations of Software Engineering.<br>
+> _Last Updated: 12/4/2023_
 
 ## New Route
 
